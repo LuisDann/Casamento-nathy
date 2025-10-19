@@ -31,10 +31,19 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 .small{font-size:.95rem;color:#666;margin-top:.6rem}
 .success{color:green}
 .error{color:#e84155}
+
+/* Input comprador */
+#compradorWrapper{max-width:480px;margin:1rem auto;text-align:center}
+#nomeComprador{padding:.5rem;width:80%;border-radius:5px;border:1px solid #ccc;font-size:1rem}
 </style>
 </head>
 <body>
 <header>🎁 Lista de Presentes - Casamento</header>
+
+<!-- Input nome do comprador -->
+<div id="compradorWrapper">
+  <input type="text" id="nomeComprador" placeholder="Digite seu nome">
+</div>
 
 <main id="catalogo">
   <!-- cards preenchidos via JS -->
@@ -78,11 +87,8 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 
 <script>
 /* ==================== Configurações ==================== */
-/* Troque aqui se mudar a chave PIX ou o valor do vale */
 const PIX_KEY = "21 971963818";
-const UNIT_PRICE = 100; // R$ por vale (fixo)
-
-/* URL do seu App Script (já fornecida) */
+const UNIT_PRICE = 100;
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
 
 /* ==================== Produtos ==================== */
@@ -101,7 +107,6 @@ const produtosComLimite = [
   {nome:"Máquina de lavar", limite:10},
   {nome:"Aspirador de pó", limite:3}
 ];
-
 const produtosNormais = [
   "Sanduicheira","Liquidificador","Mixer","Jogo de canecas","Jogo de pratos de porcelanato",
   "Utensílios de silicone","Boleira de vidro","Garrafa térmica","Escorredor de louça de parede",
@@ -115,165 +120,129 @@ const produtosNormais = [
 ];
 
 const catalogo = document.getElementById("catalogo");
-
-/* ==================== Estado local ==================== */
-/* Armazena itens já escolhidos nesta máquina (evita duplo clique local).
-   Observação: o controle definitivo de limites é no App Script (servidor). */
 let escolhidos = JSON.parse(localStorage.getItem("itensEscolhidos")) || [];
 
-/* ==================== Cria os cards no DOM ==================== */
+/* ==================== Criação de cards ==================== */
 function criarCards(){
   let id = 1;
   produtosComLimite.forEach(prod=>{
-    const card = criarCard(prod.nome, id, prod.limite);
+    const card = criarCard(prod.nome,id,prod.limite);
     catalogo.appendChild(card);
     id++;
   });
   produtosNormais.forEach(prod=>{
-    const card = criarCard(prod, id, 0);
+    const card = criarCard(prod,id,0);
     catalogo.appendChild(card);
     id++;
   });
 }
 
-function criarCard(nome, id, limite){
+function criarCard(nome,id,limite){
   const div = document.createElement("div");
-  div.className = "card";
-  div.dataset.id = id;
-  div.dataset.nome = nome;
-  div.dataset.limite = String(limite);
-
+  div.className="card";
+  div.dataset.id=id;
+  div.dataset.nome=nome;
+  div.dataset.limite=String(limite);
   div.innerHTML = `
     <img src="https://via.placeholder.com/300x180?text=${encodeURIComponent(nome)}" alt="${nome}">
     <div class="card-content">
       <h3>${nome}</h3>
-      <p>${limite>0 ? 'Limite de vales: ' + limite : 'Produto sem limite'}</p>
-      <div>
-        <input type="number" id="quantidade-${id}" value="1" min="1" ${limite>0 ? 'max="'+limite+'"' : ''}>
-      </div>
+      <p>${limite>0 ? 'Limite de vales: '+limite:'Produto sem limite'}</p>
+      <input type="number" id="quantidade-${id}" value="1" min="1" ${limite>0?'max="'+limite+'"':''}>
       <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
         <button onclick="abrirConfirm(this)">Escolher</button>
       </div>
     </div>
   `;
-  // Aplicar estado se já escolhido localmente
   if(escolhidos.includes(String(id))){
     const btn = div.querySelector("button");
-    btn.textContent = "Escolhido";
-    btn.disabled = true;
-    div.style.opacity = 0.6;
+    btn.textContent="Escolhido"; btn.disabled=true; div.style.opacity=0.6;
   }
   return div;
 }
 
-/* ==================== Modal de confirmação ==================== */
-const confirmModal = document.getElementById('confirmModal');
-const pixModal = document.getElementById('pixModal');
-let currentSelection = null; // {id, nome, limite, quantidade}
+/* ==================== Modal confirmação ==================== */
+const confirmModal=document.getElementById('confirmModal');
+const pixModal=document.getElementById('pixModal');
+let currentSelection=null;
 
 function abrirConfirm(btn){
   const card = btn.closest('.card');
-  const id = card.dataset.id;
-  const nome = card.dataset.nome;
-  const limite = parseInt(card.dataset.limite);
-  const qtdInput = document.getElementById(`quantidade-${id}`);
-  const quantidade = parseInt(qtdInput.value) || 1;
+  const id=card.dataset.id;
+  const nome=card.dataset.nome;
+  const limite=parseInt(card.dataset.limite);
+  const quantidade=parseInt(document.getElementById(`quantidade-${id}`).value)||1;
 
-  if(quantidade < 1){ alert('Informe uma quantidade válida'); return; }
-  if(limite>0 && quantidade>limite){ alert('Quantidade maior que o limite disponível'); return; }
+  const comprador = document.getElementById("nomeComprador").value.trim();
+  if(!comprador){ alert("Informe seu nome antes de escolher."); return; }
 
-  // guarda seleção atual
-  currentSelection = {id: String(id), nome, limite, quantidade};
+  if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
+  if(limite>0 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
 
-  // preenche modal
-  document.getElementById('conf-nome').textContent = `Produto: ${nome}`;
-  document.getElementById('conf-qtd').textContent = `Quantidade: ${quantidade}`;
-  document.getElementById('conf-unit').textContent = `Valor unitário: R$ ${UNIT_PRICE.toFixed(2).replace('.',',')}`;
-  const total = UNIT_PRICE * quantidade;
-  document.getElementById('conf-total').textContent = `Total: R$ ${total.toFixed(2).replace('.',',')}`;
-  document.getElementById('pix-key').textContent = PIX_KEY;
-  document.getElementById('conf-msg').textContent = '';
+  currentSelection={id:String(id),nome,limite,quantidade,comprador};
 
-  // abre
+  document.getElementById('conf-nome').textContent=`Produto: ${nome}`;
+  document.getElementById('conf-qtd').textContent=`Quantidade: ${quantidade}`;
+  document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${UNIT_PRICE.toFixed(2).replace('.',',')}`;
+  document.getElementById('conf-total').textContent=`Total: R$ ${(UNIT_PRICE*quantidade).toFixed(2).replace('.',',')}`;
+  document.getElementById('pix-key').textContent=PIX_KEY;
+  document.getElementById('conf-msg').textContent='';
+
   confirmModal.classList.add('active');
 }
 
-function fecharConfirm(){
-  confirmModal.classList.remove('active');
-  currentSelection = null;
-}
+function fecharConfirm(){ confirmModal.classList.remove('active'); currentSelection=null; }
 
-/* ==================== Copiar Pix ==================== */
 function copiarPix(){
-  navigator.clipboard && navigator.clipboard.writeText(PIX_KEY)
-    .then(()=> {
-      document.getElementById('conf-msg').textContent = 'Chave PIX copiada para a área de transferência.';
-    })
-    .catch(()=> {
-      document.getElementById('conf-msg').textContent = 'Não foi possível copiar automaticamente. Selecione e copie manualmente.';
-    });
+  navigator.clipboard.writeText(PIX_KEY).then(()=>{
+    document.getElementById('conf-msg').textContent='Chave PIX copiada.';
+  }).catch(()=>{
+    document.getElementById('conf-msg').textContent='Não foi possível copiar.';
+  });
 }
 
-/* ==================== Enviar para App Script (confirmar compra) ==================== */
+/* ==================== Confirmar compra ==================== */
 async function confirmarCompra(){
-  if(!currentSelection){ return; }
-  const {id,nome,limite,quantidade} = currentSelection;
-
-  // desativa botão confirm para evitar duplo envio
-  document.getElementById('conf-msg').textContent = 'Registrando...';
+  if(!currentSelection) return;
+  const {id,nome,limite,quantidade,comprador}=currentSelection;
+  document.getElementById('conf-msg').textContent='Registrando...';
 
   try{
-    const params = new URLSearchParams({
-      nome: nome,
-      quantidade: String(quantidade),
-      limite: String(limite)
+    const params=new URLSearchParams({
+      nome, quantidade:String(quantidade), limite:String(limite), comprador
     });
-
     const res = await fetch(`${SCRIPT_URL}?${params.toString()}`);
     const data = await res.json();
-
-    if(data.status === 'ok'){
-      // sucesso: registra localmente e bloqueia botão
+    if(data.status==='ok'){
       escolhidos.push(String(id));
-      localStorage.setItem('itensEscolhidos', JSON.stringify(escolhidos));
+      localStorage.setItem('itensEscolhidos',JSON.stringify(escolhidos));
       marcarComoEscolhido(id);
       fecharConfirm();
       abrirPixModal();
-    } else {
-      // erro do servidor (ex.: limite atingido)
-      document.getElementById('conf-msg').textContent = data.mensagem || 'Erro ao registrar. Tente novamente.';
+    } else{
+      document.getElementById('conf-msg').textContent=data.mensagem||'Erro ao registrar.';
     }
   } catch(err){
     console.error(err);
-    document.getElementById('conf-msg').textContent = 'Erro de comunicação. Tente novamente.';
+    document.getElementById('conf-msg').textContent='Erro de comunicação.';
   }
 }
 
 /* ==================== Helpers UI ==================== */
 function marcarComoEscolhido(id){
-  const card = document.querySelector(`.card[data-id="${id}"]`);
+  const card=document.querySelector(`.card[data-id="${id}"]`);
   if(!card) return;
-  const btn = card.querySelector('button');
-  btn.textContent = 'Escolhido';
-  btn.disabled = true;
-  card.style.opacity = 0.6;
+  const btn=card.querySelector('button');
+  btn.textContent='Escolhido'; btn.disabled=true; card.style.opacity=0.6;
 }
-
-function abrirPixModal(){
-  pixModal.classList.add('active');
-}
-function fecharPix(){
-  pixModal.classList.remove('active');
-}
+function abrirPixModal(){ pixModal.classList.add('active'); }
+function fecharPix(){ pixModal.classList.remove('active'); }
 
 /* ==================== Inicialização ==================== */
 criarCards();
-/* Atualiza UI para itens já marcados em localStorage */
 document.querySelectorAll('.card').forEach(card=>{
-  const id = String(card.dataset.id);
-  if(escolhidos.includes(id)){
-    marcarComoEscolhido(id);
-  }
+  const id=String(card.dataset.id);
+  if(escolhidos.includes(id)) marcarComoEscolhido(id);
 });
 </script>
 </body>
