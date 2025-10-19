@@ -1,0 +1,13 @@
+# Ignorar pastas do sistema e do OneDrive
+*.xml
+*.lnk
+.AppData/
+*.cache/
+*.VirtualBox/
+*.vscode/
+OneDrive*/
+Documents/
+Downloads/
+Music/
+Videos/
+Saved Games/

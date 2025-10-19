@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Presentes - Casamento</title>
+  <style>
+    /* ===============================
+       ESTILO GERAL
+       =============================== */
+    html, body {
+      font-family: 'Lato', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fff8f0; /* fundo bege claro */
+      color: #404040;
+    }
+
+    /* ===============================
+       HEADER
+       =============================== */
+    header {
+      background-color: #2e7d32; /* verde elegante */
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+      font-size: 2rem;
+      font-weight: bold;
+      border-bottom: 3px solid #d4af37; /* detalhe dourado */
+    }
+
+    /* ===============================
+       MAIN / CATALOGO
+       =============================== */
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ===============================
+       CARD
+       =============================== */
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s;
+      border-top: 5px solid #d4af37; /* detalhe dourado */
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #eee; /* placeholder */
+    }
+
+    .card-content {
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: #2e7d32; /* verde elegante */
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ===============================
+       BOTÃO
+       =============================== */
+    button {
+      background-color: #2e7d32;
+      border: none;
+      color: white;
+      padding: 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #256028;
+    }
+
+    button[disabled] {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* ===============================
+       INPUT QUANTIDADE
+       =============================== */
+    input {
+      padding: 0.5rem;
+      width: 80px;
+      text-align: center;
+      margin-bottom: 0.8rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    /* ===============================
+       MODAL PIX
+       =============================== */
+    #pixModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    #pixModal.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      border-top: 5px solid #d4af37;
+    }
+
+    .modal-content h2 {
+      color: #2e7d32;
+      margin-bottom: 1rem;
+    }
+
+    .close {
+      margin-top: 1rem;
+      background: #d4af37;
+    }
+  </style>
+</head>
+<body>
+  <header>🎁 Lista de Presentes - Casamento</header>
+
+  <main id="catalogo">
+    <!-- Aqui os cards serão adicionados dinamicamente pelo JavaScript -->
+  </main>
+
+  <!-- Modal Pix -->
+  <div id="pixModal">
+    <div class="modal-content">
+      <h2>🎉 Obrigado pela escolha!</h2>
+      <p>Envie o valor via Pix para:</p>
+      <h3><strong>21 971963818</strong></h3>
+      <p>Após o pagamento, o vale será registrado.</p>
+      <button class="close" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+
+  <script>
+    /* ======================================
+       CONFIGURAÇÃO APP SCRIPT
+       ====================================== */
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
+
+    /* ======================================
+       LISTA DE PRODUTOS
+       ====================================== */
+
+    // Produtos com limite de vales
+    const produtosComLimite = [
+      {nome:"Micro-ondas", limite:6},
+      {nome:"Fogão", limite:10},
+      {nome:"Armário de cozinha", limite:5},
+      {nome:"Geladeira", limite:15},
+      {nome:"Painel para TV", limite:2},
+      {nome:"Sofá", limite:10},
+      {nome:"Televisão", limite:15},
+      {nome:"Ar-condicionado", limite:10},
+      {nome:"Armário", limite:10},
+      {nome:"Colchão de casa D20", limite:3},
+      {nome:"Sapateira", limite:3},
+      {nome:"Máquina de lavar", limite:10},
+      {nome:"Aspirador de pó", limite:3}
+    ];
+
+    // Produtos normais sem limite
+    const produtosNormais = [
+      "Sanduicheira","Liquidificador","Mixer","Jogo de canecas","Jogo de pratos de porcelanato",
+      "Utensílios de silicone","Boleira de vidro","Garrafa térmica","Escorredor de louça de parede",
+      "Escorredores de inox","Talheres","Potes herméticos J1","Potes herméticos J2",
+      "Jogo de copos de vidro","Jogo de tabuleiros","Jogo de pirex","Ralador","Tábua de inox",
+      "Lixeiras","Suporte para papel higiênico","Kits suporte de toalha","Espelho","Toalhas de banho",
+      "Toalhas de rosto","Kit porta algodão, escova e cotonete + saboneteira","Cortina","Tapete",
+      "Capa de almofada","Edredom","2 jogos de lençol","Travesseiros","Cabeceira",
+      "Capa de colchão impermeável","Sexto de roupa","Mope","Ferro de passar roupa","Tábua de passar roupa",
+      "Varal de teto","Varal de chão"
+    ];
+
+    const catalogo = document.getElementById("catalogo");
+    const pixModal = document.getElementById("pixModal");
+
+    /* ======================================
+       FUNÇÕES DE MODAL
+       ====================================== */
+    function abrirModal() { pixModal.classList.add("active"); }
+    function fecharModal() { pixModal.classList.remove("active"); }
+
+    /* ======================================
+       CRIAÇÃO DINÂMICA DE CARDS
+       ====================================== */
+    function criarCards() {
+      let id = 1;
+
+      // Adiciona produtos com limite
+      produtosComLimite.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.id = id;
+        card.dataset.limite = item.limite;
+        card.dataset.nome = item.nome;
+        card.innerHTML = `
+          <img src="https://via.placeholder.com/300x180?text=${encodeURIComponent(item.nome)}" alt="${item.nome}">
+          <div class="card-content">
+            <h3>${item.nome}</h3>
+            <p>Limite de vales: ${item.limite}</p>
+            <input type="number" value="1" min="1" max="${item.limite}" id="quantidade-${id}">
+            <button onclick="escolherItem(this)">Escolher</button>
+          </div>
+        `;
+        catalogo.appendChild(card);
+        id++;
+      });
+
+      // Adiciona produtos normais sem limite
+      produtosNormais.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.id = id;
+        card.dataset.nome = item;
+        card.dataset.limite = 0;
+        card.innerHTML = `
+          <img src="https://via.placeholder.com/300x180?text=${encodeURIComponent(item)}" alt="${item}">
+          <div class="card-content">
+            <h3>${item}</h3>
+            <p>Produto sem limite</p>
+            <input type="number" value="1" min="1" id="quantidade-${id}">
+            <button onclick="escolherItem(this)">Escolher</button>
+          </div>
+        `;
+        catalogo.appendChild(card);
+        id++;
+      });
+    }
+
+    /* ======================================
+       LOCAL STORAGE PARA ITENS ESCOLHIDOS
+       ====================================== */
+    const escolhidos = JSON.parse(localStorage.getItem("itensEscolhidos")) || [];
+
+    function atualizarCatalogo() {
+      document.querySelectorAll(".card").forEach(card => {
+        const id = card.dataset.id;
+        if(escolhidos.includes(id)){
+          const botao = card.querySelector("button");
+          botao.textContent = "Escolhido";
+          botao.disabled = true;
+          card.style.opacity = 0.6;
+        }
+      });
+    }
+
+    /* ======================================
+       ESCOLHA DE ITEM E INTEGRAÇÃO APP SCRIPT
+       ====================================== */
+    function escolherItem(botao) {
+      const card = botao.closest(".card");
+      const id = card.dataset.id;
+      const nomeProduto = card.dataset.nome;
+      const limite = parseInt(card.dataset.limite);
+      const quantidadeInput = document.getElementById(`quantidade-${id}`);
+      const quantidadeEscolhida = parseInt(quantidadeInput.value);
+
+      if(quantidadeEscolhida < 1) { alert("Informe uma quantidade válida"); return; }
+
+      // Envia para App Script (registro de compra)
+      fetch(SCRIPT_URL + `?nome=${encodeURIComponent(nomeProduto)}&quantidade=${quantidadeEscolhida}&limite=${limite}`)
+        .then(res => res.json())
+        .then(data => {
+          if(data.status === "ok") {
+            escolhidos.push(id);
+            localStorage.setItem("itensEscolhidos", JSON.stringify(escolhidos));
+            atualizarCatalogo();
+            abrirModal();
+          } else {
+            alert(data.mensagem);
+          }
+        })
+        .catch(err => {
+          alert("Erro ao registrar o vale. Tente novamente.");
+          console.error(err);
+        });
+    }
+
+    /* ======================================
+       INICIALIZAÇÃO
+       ====================================== */
+    criarCards();
+    atualizarCatalogo();
+  </script>
+</body>
+</html>
