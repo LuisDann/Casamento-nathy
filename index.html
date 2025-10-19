@@ -1,336 +1,280 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lista de Presentes - Casamento</title>
-  <style>
-    /* ===============================
-       ESTILO GERAL
-       =============================== */
-    html, body {
-      font-family: 'Lato', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #fff8f0; /* fundo bege claro */
-      color: #404040;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lista de Presentes - Casamento</title>
+<style>
+/* === Estilo (mantive sua paleta) === */
+html,body{font-family:'Lato',sans-serif;margin:0;padding:0;background-color:#fff8f0;color:#404040}
+header{background-color:#2e7d32;color:#fff;text-align:center;padding:2rem;font-size:2rem;font-weight:bold;border-bottom:3px solid #d4af37}
+main{max-width:1200px;margin:2rem auto;padding:0 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
+.card{background:#fff;border-radius:12px;box-shadow:0 3px 6px rgba(0,0,0,.16);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s;border-top:5px solid #d4af37}
+.card:hover{transform:scale(1.03)}
+.card img{width:100%;height:180px;object-fit:cover;background:#eee}
+.card-content{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.card h3{font-size:1.2rem;margin-bottom:.5rem;color:#2e7d32}
+.card p{font-size:.95rem;color:#555;margin-bottom:.8rem}
+button{background-color:#2e7d32;border:none;color:#fff;padding:.75rem;border-radius:8px;cursor:pointer;font-size:1rem;transition:background .3s}
+button:hover{background-color:#256028}
+button[disabled]{background:#ccc;cursor:not-allowed}
+input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radius:5px;border:1px solid #ccc}
 
-    /* ===============================
-       HEADER
-       =============================== */
-    header {
-      background-color: #2e7d32; /* verde elegante */
-      color: #fff;
-      text-align: center;
-      padding: 2rem;
-      font-size: 2rem;
-      font-weight: bold;
-      border-bottom: 3px solid #d4af37; /* detalhe dourado */
-    }
-
-    /* ===============================
-       MAIN / CATALOGO
-       =============================== */
-    main {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
-
-    /* ===============================
-       CARD
-       =============================== */
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.3s;
-      border-top: 5px solid #d4af37; /* detalhe dourado */
-    }
-
-    .card:hover {
-      transform: scale(1.03);
-    }
-
-    .card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      background: #eee; /* placeholder */
-    }
-
-    .card-content {
-      padding: 1rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .card h3 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-      color: #2e7d32; /* verde elegante */
-    }
-
-    .card p {
-      font-size: 0.95rem;
-      color: #555;
-      margin-bottom: 0.8rem;
-    }
-
-    /* ===============================
-       BOTÃO
-       =============================== */
-    button {
-      background-color: #2e7d32;
-      border: none;
-      color: white;
-      padding: 0.75rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #256028;
-    }
-
-    button[disabled] {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-    /* ===============================
-       INPUT QUANTIDADE
-       =============================== */
-    input {
-      padding: 0.5rem;
-      width: 80px;
-      text-align: center;
-      margin-bottom: 0.8rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    /* ===============================
-       MODAL PIX
-       =============================== */
-    #pixModal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      visibility: hidden;
-      opacity: 0;
-      transition: 0.3s;
-    }
-
-    #pixModal.active {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .modal-content {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 12px;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      border-top: 5px solid #d4af37;
-    }
-
-    .modal-content h2 {
-      color: #2e7d32;
-      margin-bottom: 1rem;
-    }
-
-    .close {
-      margin-top: 1rem;
-      background: #d4af37;
-    }
-  </style>
+/* Modal (confirm) */
+#confirmModal,#pixModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:center;visibility:hidden;opacity:0;transition:.2s}
+#confirmModal.active,#pixModal.active{visibility:visible;opacity:1}
+.modal{background:#fff;padding:1.5rem;border-radius:12px;max-width:480px;width:90%;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.3);border-top:5px solid #d4af37}
+.modal h2{color:#2e7d32;margin-bottom:.8rem}
+.modal p{margin:.4rem 0}
+.modal .row{display:flex;gap:.5rem;justify-content:center;align-items:center;margin-top:.6rem}
+.copy-btn{background:#d4af37;color:#fff;padding:.5rem 1rem;border-radius:8px;border:none;cursor:pointer}
+.small{font-size:.95rem;color:#666;margin-top:.6rem}
+.success{color:green}
+.error{color:#e84155}
+</style>
 </head>
 <body>
-  <header>🎁 Lista de Presentes - Casamento</header>
+<header>🎁 Lista de Presentes - Casamento</header>
 
-  <main id="catalogo">
-    <!-- Aqui os cards serão adicionados dinamicamente pelo JavaScript -->
-  </main>
+<main id="catalogo">
+  <!-- cards preenchidos via JS -->
+</main>
 
-  <!-- Modal Pix -->
-  <div id="pixModal">
-    <div class="modal-content">
-      <h2>🎉 Obrigado pela escolha!</h2>
-      <p>Envie o valor via Pix para:</p>
-      <h3><strong>21 971963818</strong></h3>
-      <p>Após o pagamento, o vale será registrado.</p>
-      <button class="close" onclick="fecharModal()">Fechar</button>
+<!-- Modal de confirmação (seleção: mostra nome, quantidade, total e PIX) -->
+<div id="confirmModal">
+  <div class="modal">
+    <h2>Confirmar presente</h2>
+    <p id="conf-nome">Produto: —</p>
+    <p id="conf-qtd">Quantidade: —</p>
+    <p id="conf-unit">Valor unitário: —</p>
+    <p id="conf-total" style="font-weight:700">Total: —</p>
+
+    <div class="small">Pix para pagamento:</div>
+    <div style="margin:0.5rem 0;">
+      <strong id="pix-key">21 971963818</strong>
+    </div>
+
+    <div class="row">
+      <button class="copy-btn" onclick="copiarPix()">Copiar Pix</button>
+      <button onclick="confirmarCompra()">Confirmar pagamento</button>
+      <button onclick="fecharConfirm()">Cancelar</button>
+    </div>
+
+    <p id="conf-msg" class="small"></p>
+  </div>
+</div>
+
+<!-- Modal de agradecimento (após sucesso) -->
+<div id="pixModal">
+  <div class="modal">
+    <h2>🎉 Obrigado pela sua contribuição!</h2>
+    <p>Envie o comprovante via WhatsApp (ou aguarde contato).</p>
+    <p class="small">PIX: <strong>21 971963818</strong></p>
+    <div class="row">
+      <button onclick="fecharPix()">Fechar</button>
     </div>
   </div>
+</div>
 
-  <script>
-    /* ======================================
-       CONFIGURAÇÃO APP SCRIPT
-       ====================================== */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
+<script>
+/* ==================== Configurações ==================== */
+/* Troque aqui se mudar a chave PIX ou o valor do vale */
+const PIX_KEY = "21 971963818";
+const UNIT_PRICE = 100; // R$ por vale (fixo)
 
-    /* ======================================
-       LISTA DE PRODUTOS
-       ====================================== */
+/* URL do seu App Script (já fornecida) */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
 
-    // Produtos com limite de vales
-    const produtosComLimite = [
-      {nome:"Micro-ondas", limite:6},
-      {nome:"Fogão", limite:10},
-      {nome:"Armário de cozinha", limite:5},
-      {nome:"Geladeira", limite:15},
-      {nome:"Painel para TV", limite:2},
-      {nome:"Sofá", limite:10},
-      {nome:"Televisão", limite:15},
-      {nome:"Ar-condicionado", limite:10},
-      {nome:"Armário", limite:10},
-      {nome:"Colchão de casa D20", limite:3},
-      {nome:"Sapateira", limite:3},
-      {nome:"Máquina de lavar", limite:10},
-      {nome:"Aspirador de pó", limite:3}
-    ];
+/* ==================== Produtos ==================== */
+const produtosComLimite = [
+  {nome:"Micro-ondas", limite:6},
+  {nome:"Fogão", limite:10},
+  {nome:"Armário de cozinha", limite:5},
+  {nome:"Geladeira", limite:15},
+  {nome:"Painel para TV", limite:2},
+  {nome:"Sofá", limite:10},
+  {nome:"Televisão", limite:15},
+  {nome:"Ar-condicionado", limite:10},
+  {nome:"Armário", limite:10},
+  {nome:"Colchão de casa D20", limite:3},
+  {nome:"Sapateira", limite:3},
+  {nome:"Máquina de lavar", limite:10},
+  {nome:"Aspirador de pó", limite:3}
+];
 
-    // Produtos normais sem limite
-    const produtosNormais = [
-      "Sanduicheira","Liquidificador","Mixer","Jogo de canecas","Jogo de pratos de porcelanato",
-      "Utensílios de silicone","Boleira de vidro","Garrafa térmica","Escorredor de louça de parede",
-      "Escorredores de inox","Talheres","Potes herméticos J1","Potes herméticos J2",
-      "Jogo de copos de vidro","Jogo de tabuleiros","Jogo de pirex","Ralador","Tábua de inox",
-      "Lixeiras","Suporte para papel higiênico","Kits suporte de toalha","Espelho","Toalhas de banho",
-      "Toalhas de rosto","Kit porta algodão, escova e cotonete + saboneteira","Cortina","Tapete",
-      "Capa de almofada","Edredom","2 jogos de lençol","Travesseiros","Cabeceira",
-      "Capa de colchão impermeável","Sexto de roupa","Mope","Ferro de passar roupa","Tábua de passar roupa",
-      "Varal de teto","Varal de chão"
-    ];
+const produtosNormais = [
+  "Sanduicheira","Liquidificador","Mixer","Jogo de canecas","Jogo de pratos de porcelanato",
+  "Utensílios de silicone","Boleira de vidro","Garrafa térmica","Escorredor de louça de parede",
+  "Escorredores de inox","Talheres","Potes herméticos J1","Potes herméticos J2",
+  "Jogo de copos de vidro","Jogo de tabuleiros","Jogo de pirex","Ralador","Tábua de inox",
+  "Lixeiras","Suporte para papel higiênico","Kits suporte de toalha","Espelho","Toalhas de banho",
+  "Toalhas de rosto","Kit porta algodão, escova e cotonete + saboneteira","Cortina","Tapete",
+  "Capa de almofada","Edredom","2 jogos de lençol","Travesseiros","Cabeceira",
+  "Capa de colchão impermeável","Sexto de roupa","Mope","Ferro de passar roupa","Tábua de passar roupa",
+  "Varal de teto","Varal de chão"
+];
 
-    const catalogo = document.getElementById("catalogo");
-    const pixModal = document.getElementById("pixModal");
+const catalogo = document.getElementById("catalogo");
 
-    /* ======================================
-       FUNÇÕES DE MODAL
-       ====================================== */
-    function abrirModal() { pixModal.classList.add("active"); }
-    function fecharModal() { pixModal.classList.remove("active"); }
+/* ==================== Estado local ==================== */
+/* Armazena itens já escolhidos nesta máquina (evita duplo clique local).
+   Observação: o controle definitivo de limites é no App Script (servidor). */
+let escolhidos = JSON.parse(localStorage.getItem("itensEscolhidos")) || [];
 
-    /* ======================================
-       CRIAÇÃO DINÂMICA DE CARDS
-       ====================================== */
-    function criarCards() {
-      let id = 1;
+/* ==================== Cria os cards no DOM ==================== */
+function criarCards(){
+  let id = 1;
+  produtosComLimite.forEach(prod=>{
+    const card = criarCard(prod.nome, id, prod.limite);
+    catalogo.appendChild(card);
+    id++;
+  });
+  produtosNormais.forEach(prod=>{
+    const card = criarCard(prod, id, 0);
+    catalogo.appendChild(card);
+    id++;
+  });
+}
 
-      // Adiciona produtos com limite
-      produtosComLimite.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.dataset.id = id;
-        card.dataset.limite = item.limite;
-        card.dataset.nome = item.nome;
-        card.innerHTML = `
-          <img src="https://via.placeholder.com/300x180?text=${encodeURIComponent(item.nome)}" alt="${item.nome}">
-          <div class="card-content">
-            <h3>${item.nome}</h3>
-            <p>Limite de vales: ${item.limite}</p>
-            <input type="number" value="1" min="1" max="${item.limite}" id="quantidade-${id}">
-            <button onclick="escolherItem(this)">Escolher</button>
-          </div>
-        `;
-        catalogo.appendChild(card);
-        id++;
-      });
+function criarCard(nome, id, limite){
+  const div = document.createElement("div");
+  div.className = "card";
+  div.dataset.id = id;
+  div.dataset.nome = nome;
+  div.dataset.limite = String(limite);
 
-      // Adiciona produtos normais sem limite
-      produtosNormais.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.dataset.id = id;
-        card.dataset.nome = item;
-        card.dataset.limite = 0;
-        card.innerHTML = `
-          <img src="https://via.placeholder.com/300x180?text=${encodeURIComponent(item)}" alt="${item}">
-          <div class="card-content">
-            <h3>${item}</h3>
-            <p>Produto sem limite</p>
-            <input type="number" value="1" min="1" id="quantidade-${id}">
-            <button onclick="escolherItem(this)">Escolher</button>
-          </div>
-        `;
-        catalogo.appendChild(card);
-        id++;
-      });
+  div.innerHTML = `
+    <img src="https://via.placeholder.com/300x180?text=${encodeURIComponent(nome)}" alt="${nome}">
+    <div class="card-content">
+      <h3>${nome}</h3>
+      <p>${limite>0 ? 'Limite de vales: ' + limite : 'Produto sem limite'}</p>
+      <div>
+        <input type="number" id="quantidade-${id}" value="1" min="1" ${limite>0 ? 'max="'+limite+'"' : ''}>
+      </div>
+      <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
+        <button onclick="abrirConfirm(this)">Escolher</button>
+      </div>
+    </div>
+  `;
+  // Aplicar estado se já escolhido localmente
+  if(escolhidos.includes(String(id))){
+    const btn = div.querySelector("button");
+    btn.textContent = "Escolhido";
+    btn.disabled = true;
+    div.style.opacity = 0.6;
+  }
+  return div;
+}
+
+/* ==================== Modal de confirmação ==================== */
+const confirmModal = document.getElementById('confirmModal');
+const pixModal = document.getElementById('pixModal');
+let currentSelection = null; // {id, nome, limite, quantidade}
+
+function abrirConfirm(btn){
+  const card = btn.closest('.card');
+  const id = card.dataset.id;
+  const nome = card.dataset.nome;
+  const limite = parseInt(card.dataset.limite);
+  const qtdInput = document.getElementById(`quantidade-${id}`);
+  const quantidade = parseInt(qtdInput.value) || 1;
+
+  if(quantidade < 1){ alert('Informe uma quantidade válida'); return; }
+  if(limite>0 && quantidade>limite){ alert('Quantidade maior que o limite disponível'); return; }
+
+  // guarda seleção atual
+  currentSelection = {id: String(id), nome, limite, quantidade};
+
+  // preenche modal
+  document.getElementById('conf-nome').textContent = `Produto: ${nome}`;
+  document.getElementById('conf-qtd').textContent = `Quantidade: ${quantidade}`;
+  document.getElementById('conf-unit').textContent = `Valor unitário: R$ ${UNIT_PRICE.toFixed(2).replace('.',',')}`;
+  const total = UNIT_PRICE * quantidade;
+  document.getElementById('conf-total').textContent = `Total: R$ ${total.toFixed(2).replace('.',',')}`;
+  document.getElementById('pix-key').textContent = PIX_KEY;
+  document.getElementById('conf-msg').textContent = '';
+
+  // abre
+  confirmModal.classList.add('active');
+}
+
+function fecharConfirm(){
+  confirmModal.classList.remove('active');
+  currentSelection = null;
+}
+
+/* ==================== Copiar Pix ==================== */
+function copiarPix(){
+  navigator.clipboard && navigator.clipboard.writeText(PIX_KEY)
+    .then(()=> {
+      document.getElementById('conf-msg').textContent = 'Chave PIX copiada para a área de transferência.';
+    })
+    .catch(()=> {
+      document.getElementById('conf-msg').textContent = 'Não foi possível copiar automaticamente. Selecione e copie manualmente.';
+    });
+}
+
+/* ==================== Enviar para App Script (confirmar compra) ==================== */
+async function confirmarCompra(){
+  if(!currentSelection){ return; }
+  const {id,nome,limite,quantidade} = currentSelection;
+
+  // desativa botão confirm para evitar duplo envio
+  document.getElementById('conf-msg').textContent = 'Registrando...';
+
+  try{
+    const params = new URLSearchParams({
+      nome: nome,
+      quantidade: String(quantidade),
+      limite: String(limite)
+    });
+
+    const res = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+    const data = await res.json();
+
+    if(data.status === 'ok'){
+      // sucesso: registra localmente e bloqueia botão
+      escolhidos.push(String(id));
+      localStorage.setItem('itensEscolhidos', JSON.stringify(escolhidos));
+      marcarComoEscolhido(id);
+      fecharConfirm();
+      abrirPixModal();
+    } else {
+      // erro do servidor (ex.: limite atingido)
+      document.getElementById('conf-msg').textContent = data.mensagem || 'Erro ao registrar. Tente novamente.';
     }
+  } catch(err){
+    console.error(err);
+    document.getElementById('conf-msg').textContent = 'Erro de comunicação. Tente novamente.';
+  }
+}
 
-    /* ======================================
-       LOCAL STORAGE PARA ITENS ESCOLHIDOS
-       ====================================== */
-    const escolhidos = JSON.parse(localStorage.getItem("itensEscolhidos")) || [];
+/* ==================== Helpers UI ==================== */
+function marcarComoEscolhido(id){
+  const card = document.querySelector(`.card[data-id="${id}"]`);
+  if(!card) return;
+  const btn = card.querySelector('button');
+  btn.textContent = 'Escolhido';
+  btn.disabled = true;
+  card.style.opacity = 0.6;
+}
 
-    function atualizarCatalogo() {
-      document.querySelectorAll(".card").forEach(card => {
-        const id = card.dataset.id;
-        if(escolhidos.includes(id)){
-          const botao = card.querySelector("button");
-          botao.textContent = "Escolhido";
-          botao.disabled = true;
-          card.style.opacity = 0.6;
-        }
-      });
-    }
+function abrirPixModal(){
+  pixModal.classList.add('active');
+}
+function fecharPix(){
+  pixModal.classList.remove('active');
+}
 
-    /* ======================================
-       ESCOLHA DE ITEM E INTEGRAÇÃO APP SCRIPT
-       ====================================== */
-    function escolherItem(botao) {
-      const card = botao.closest(".card");
-      const id = card.dataset.id;
-      const nomeProduto = card.dataset.nome;
-      const limite = parseInt(card.dataset.limite);
-      const quantidadeInput = document.getElementById(`quantidade-${id}`);
-      const quantidadeEscolhida = parseInt(quantidadeInput.value);
-
-      if(quantidadeEscolhida < 1) { alert("Informe uma quantidade válida"); return; }
-
-      // Envia para App Script (registro de compra)
-      fetch(SCRIPT_URL + `?nome=${encodeURIComponent(nomeProduto)}&quantidade=${quantidadeEscolhida}&limite=${limite}`)
-        .then(res => res.json())
-        .then(data => {
-          if(data.status === "ok") {
-            escolhidos.push(id);
-            localStorage.setItem("itensEscolhidos", JSON.stringify(escolhidos));
-            atualizarCatalogo();
-            abrirModal();
-          } else {
-            alert(data.mensagem);
-          }
-        })
-        .catch(err => {
-          alert("Erro ao registrar o vale. Tente novamente.");
-          console.error(err);
-        });
-    }
-
-    /* ======================================
-       INICIALIZAÇÃO
-       ====================================== */
-    criarCards();
-    atualizarCatalogo();
-  </script>
+/* ==================== Inicialização ==================== */
+criarCards();
+/* Atualiza UI para itens já marcados em localStorage */
+document.querySelectorAll('.card').forEach(card=>{
+  const id = String(card.dataset.id);
+  if(escolhidos.includes(id)){
+    marcarComoEscolhido(id);
+  }
+});
+</script>
 </body>
 </html>
