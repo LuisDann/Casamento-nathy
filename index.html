@@ -99,7 +99,7 @@ const produtos = [
 {name:"Utensílios de silicone", valor:50, img:"imagens/UTENCILIOSDESILICONE.jpg", limite:5},
 {name:"Boleira de vidro", valor:50, img:"imagens/BOLEIRADEVIDRO.jpg", limite:5},
 {name:"Garrafa térmica", valor:55, img:"imagens/GARRAFATERMICA.jpg", limite:5},
-{name:"Escorredor de louça de parede", valor:60, img:"imagens/ESCORREDORDELOUCADEPARADE.jpg", limite:5},
+{name:"Escorredor de louça de parede", valor:60, img:"imagens/ESCORREDORDELOUÇADEPARADE.jpg", limite:5},
 {name:"Escorredores de inox", valor:70, img:"imagens/ESCORREDORDEINOX.jpeg", limite:5},
 {name:"Talheres", valor:60, img:"imagens/TALHERES.jpg", limite:5},
 {name:"Potes herméticos J1", valor:90, img:"imagens/POTESHERMETICOSJ1.jpg", limite:5},
@@ -142,16 +142,12 @@ function criarCards(){
     const div=document.createElement("div");
     div.className="card";
     div.dataset.id=idx;
-    div.dataset.nome=prod.nome;
-    div.dataset.limite=prod.limite;
-    let inputHTML = prod.limite>1 ? `<input type="number" id="quantidade-${idx}" value="1" min="1" max="${prod.limite}">` : '';
-    const tipoTexto = prod.limite===1 ? 'Item único' : `Limite de vales: ${prod.limite}`;
     div.innerHTML=`
       <img src="${prod.img}" alt="${prod.nome}">
       <div class="card-content">
         <h3>${prod.nome}</h3>
-        <p>${tipoTexto}</p>
-        ${inputHTML}
+        <p>${prod.limite===1 ? 'Item único' : `Limite de vales: ${prod.limite}`}</p>
+        ${prod.limite>1 ? `<input type="number" id="quantidade-${idx}" value="1" min="1" max="${prod.limite}">` : ''}
         <p>Valor unitário: R$ ${prod.valor.toFixed(2).replace('.',',')}</p>
         <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
           <button onclick="abrirConfirm(this)">Escolher</button>
@@ -173,14 +169,14 @@ function abrirConfirm(btn){
   const card=btn.closest('.card');
   const id=parseInt(card.dataset.id);
   const prod = produtos[id];
-  const limite=parseInt(card.dataset.limite);
+  const limite = prod.limite;
   let quantidade = limite>1 ? parseInt(document.getElementById(`quantidade-${id}`).value)||1 : 1;
   const comprador=document.getElementById("nomeComprador").value.trim();
   if(!comprador){ alert("Informe seu nome antes de escolher."); return; }
   if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
   if(limite>1 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
 
-  currentSelection={id,prod,limite,quantidade,comprador};
+  currentSelection={id,prod,quantidade,comprador};
   document.getElementById('conf-nome').textContent=`Produto: ${prod.nome}`;
   document.getElementById('conf-qtd').textContent=`Quantidade: ${quantidade}`;
   document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${prod.valor.toFixed(2).replace('.',',')}`;
@@ -196,10 +192,10 @@ function copiarPix(){ navigator.clipboard.writeText(PIX_KEY).then(()=>{document.
 
 async function confirmarCompra(){
   if(!currentSelection) return;
-  const {id,prod,limite,quantidade,comprador}=currentSelection;
+  const {id,prod,quantidade,comprador}=currentSelection;
   document.getElementById('conf-msg').textContent='Registrando...';
   try{
-    const params=new URLSearchParams({nome:prod.nome, quantidade:String(quantidade), limite:String(limite), comprador});
+    const params=new URLSearchParams({nome:prod.nome, quantidade:String(quantidade), comprador});
     const res=await fetch(`${SCRIPT_URL}?${params.toString()}`);
     const data=await res.json();
     if(data.status==='ok'){
