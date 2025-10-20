@@ -150,10 +150,10 @@ const vales = [
   "Toalhas de rosto","Kit porta algodão, escova e cotonete + saboneteira","Cortina","Tapete",
   "Capa de almofada","Edredom","2 jogos de lençol","Travesseiros","Cabeceira",
   "Capa de colchão impermeável","Cesto de roupa","Mope","Ferro de passar roupa","Tábua de passar roupa",
-  "Varal de teto","Varal de chão","Chaleira","Jarra de suco","Panela de pressão","Suporte higiene","Sexto de roupa"
+  "Varal de teto","Varal de chão","Chaleira","Jarra de suco","Panela de pressão","Suporte higiene"
 ];
 
-// Itens com limite 1
+// Itens com limite
 const itensNormais = [
   {nome:"Micro-ondas", limite:6},
   {nome:"Fogão", limite:10},
@@ -210,7 +210,7 @@ function criarCard(nome, id, limite) {
     <img src="${imgSrc}" alt="${nome}">
     <div class="card-content">
       <h3>${nome}</h3>
-      <p>${limite>0?'Limite de vales: '+limite:'Produto sem limite'}</p>
+      <p>${limite>0?'Quantidade: 1':'Produto sem limite'}</p>
       <input type="number" id="quantidade-${id}" value="1" min="1" ${limite>0?'max="'+limite+'"':''}>
       <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
         <button onclick="abrirConfirm(this)">Escolher</button>
