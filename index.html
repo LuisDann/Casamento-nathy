@@ -251,17 +251,25 @@ async function confirmarCompra(){
   const {id,nome,limite,quantidade,comprador}=currentSelection;
   document.getElementById('conf-msg').textContent='Registrando...';
   try{
-    const params=new URLSearchParams({ nome, quantidade:String(quantidade), limite:String(limite), comprador });
-    const res=await fetch(`${SCRIPT_URL}?${params.toString()}`);
-    const data=await res.json();
+    const params = new URLSearchParams({ nome, quantidade:String(quantidade), limite:String(limite), comprador });
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: params
+    });
+    const data = await res.json();
     if(data.status==='ok'){
       escolhidos.push(String(id));
       localStorage.setItem('itensEscolhidos',JSON.stringify(escolhidos));
       marcarComoEscolhido(id);
       fecharConfirm();
       abrirPixModal();
-    } else { document.getElementById('conf-msg').textContent=data.mensagem||'Erro ao registrar.'; }
-  } catch(err){ console.error(err); document.getElementById('conf-msg').textContent='Erro de comunicação.'; }
+    } else {
+      document.getElementById('conf-msg').textContent=data.mensagem||'Erro ao registrar.';
+    }
+  } catch(err){ 
+    console.error(err); 
+    document.getElementById('conf-msg').textContent='Erro de comunicação.'; 
+  }
 }
 
 function marcarComoEscolhido(id){
