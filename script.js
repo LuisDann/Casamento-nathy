@@ -110,26 +110,30 @@ function fecharConfirm(){ confirmModal.classList.remove('active'); currentSelect
 function copiarPix(){ navigator.clipboard.writeText(PIX_KEY).then(()=>{document.getElementById('conf-msg').textContent='Chave PIX copiada.'})}
 async function confirmarCompra(){
   if(!currentSelection) return;
-  const {id,nome,quantidade,comprador}=currentSelection;
+  const {id,nome,quantidade,comprador} = currentSelection;
   document.getElementById('conf-msg').textContent='Registrando...';
-  try{
-    const params=new URLSearchParams({nome, quantidade:String(quantidade), comprador});
-    const res=await fetch(`${SCRIPT_URL}?${params.toString()}`);
-    const data=await res.json();
-    if(data.status==='ok'){
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({ nome, quantidade:String(quantidade), comprador })
+    });
+    const data = await res.json();
+    if(data.status === 'ok'){
       escolhidos.push(String(id));
-      localStorage.setItem('itensEscolhidos',JSON.stringify(escolhidos));
+      localStorage.setItem('itensEscolhidos', JSON.stringify(escolhidos));
       marcarComoEscolhido(id);
       fecharConfirm();
       abrirPixModal();
-    } else{
-      document.getElementById('conf-msg').textContent=data.mensagem||'Erro ao registrar.';
+    } else {
+      document.getElementById('conf-msg').textContent = data.mensagem || 'Erro ao registrar.';
     }
   } catch(err){
     console.error(err);
     document.getElementById('conf-msg').textContent='Erro de comunicação.';
   }
 }
+
 
 function marcarComoEscolhido(id){
   const card=document.querySelector(`.card[data-id="${id}"]`);
