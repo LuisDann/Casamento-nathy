@@ -5,35 +5,35 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Lista de Presentes - Casamento</title>
-  <style>
-    html,body{font-family:'Lato',sans-serif;margin:0;padding:0;background-color:#fff8f0;color:#404040}
-    header{background-color:#2e7d32;color:#fff;text-align:center;padding:2rem;font-size:2rem;font-weight:bold;border-bottom:3px solid #d4af37}
-    main{max-width:1200px;margin:2rem auto;padding:0 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
-    .card{background:#fff;border-radius:12px;box-shadow:0 3px 6px rgba(0,0,0,.16);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s;border-top:5px solid #d4af37}
-    .card:hover{transform:scale(1.03)}
-    .card img{width:100%;height:180px;object-fit:contain;background:#eee}
-    .card-content{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:space-between}
-    .card h3{font-size:1.2rem;margin-bottom:.5rem;color:#2e7d32}
-    .card p{font-size:.95rem;color:#555;margin-bottom:.8rem}
-    button{background-color:#2e7d32;border:none;color:#fff;padding:.75rem;border-radius:8px;cursor:pointer;font-size:1rem;transition:background .3s}
-    button:hover{background-color:#256028}
-    button[disabled]{background:#ccc;cursor:not-allowed}
-    input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radius:5px;border:1px solid #ccc}
+ <style>
+html,body{font-family:'Montserrat',sans-serif;margin:0;padding:0;background-color:#fefcf8;color:#333}
+header{background-color:#4a7c59;color:#fff;text-align:center;padding:2rem;font-size:2rem;font-weight:700;border-bottom:3px solid #c9a66b;letter-spacing:1px}
+main{max-width:1200px;margin:2rem auto;padding:0 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem}
+.card{background:#fff;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.12);overflow:hidden;display:flex;flex-direction:column;transition:transform .35s, box-shadow .35s;border-top:5px solid #c9a66b}
+.card:hover{transform:translateY(-5px);box-shadow:0 15px 35px rgba(0,0,0,.18)}
+.card img{width:100%;height:180px;object-fit:cover;background:#eee;transition:transform .3s}
+.card img:hover{transform:scale(1.05)}
+.card-content{padding:1.2rem;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.card h3{font-size:1.3rem;margin-bottom:.6rem;color:#3f6d4b;text-transform:capitalize}
+.card p{font-size:1rem;color:#555;margin-bottom:.8rem}
+button{background:linear-gradient(135deg,#4a7c59,#6aa67a);border:none;color:#fff;padding:.75rem;border-radius:12px;cursor:pointer;font-size:1rem;transition:background .3s, transform .2s, box-shadow .2s}
+button:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,.2)}
+button[disabled]{background:#ccc;cursor:not-allowed;box-shadow:none}
+input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radius:8px;border:1px solid #ccc;font-weight:500}
 
-    #confirmModal,#pixModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:center;visibility:hidden;opacity:0;transition:.2s}
-    #confirmModal.active,#pixModal.active{visibility:visible;opacity:1}
-    .modal{background:#fff;padding:1.5rem;border-radius:12px;max-width:480px;width:90%;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.3);border-top:5px solid #d4af37}
-    .modal h2{color:#2e7d32;margin-bottom:.8rem}
-    .modal p{margin:.4rem 0}
-    .modal .row{display:flex;gap:.5rem;justify-content:center;align-items:center;margin-top:.6rem}
-    .copy-btn{background:#d4af37;color:#fff;padding:.5rem 1rem;border-radius:8px;border:none;cursor:pointer}
-    .small{font-size:.95rem;color:#666;margin-top:.6rem}
-    .success{color:green}
-    .error{color:#e84155}
+#confirmModal,#pixModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:flex;justify-content:center;align-items:center;visibility:hidden;opacity:0;transition:.3s}
+#confirmModal.active,#pixModal.active{visibility:visible;opacity:1}
+.modal{background:#fff;padding:2rem;border-radius:16px;max-width:480px;width:90%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.2);border-top:6px solid #c9a66b}
+.modal h2{color:#4a7c59;margin-bottom:1rem;font-weight:700;font-size:1.6rem}
+.modal p{margin:.5rem 0;font-size:1rem;color:#444}
+.modal .row{display:flex;gap:.6rem;justify-content:center;align-items:center;margin-top:1rem}
+.copy-btn{background:#c9a66b;color:#fff;padding:.5rem 1rem;border-radius:12px;border:none;cursor:pointer;transition:transform .2s}
+.copy-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.small{font-size:.9rem;color:#666;margin-top:.6rem}
 
-    #compradorWrapper{max-width:480px;margin:1rem auto;text-align:center}
-    #nomeComprador{padding:.5rem;width:80%;border-radius:5px;border:1px solid #ccc;font-size:1rem}
-  </style>
+#compradorWrapper{max-width:480px;margin:1.5rem auto;text-align:center}
+#nomeComprador{padding:.6rem;width:85%;border-radius:8px;border:1px solid #ccc;font-size:1rem;font-weight:500;box-shadow:0 3px 8px rgba(0,0,0,.1)}
+</style>
 </head>
 <body>
 <header>🎀 Lista de Presentes - Chá De Casa Nova</header>
