@@ -1,207 +1,313 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Lista de Presentes - Casamento</title>
-  <link rel="icon" type="image/png" href="icon.png">
-  <style>
-    body {
-      font-family: 'Lato', sans-serif;
-      background-color: #fff8f0;
-      color: #404040;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #2e7d32;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-    }
-    main {
-      padding: 1rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-    }
-    .card {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      background-color: white;
-      transition: transform .2s;
-    }
-    .card:hover {
-      transform: scale(1.02);
-    }
-    .card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-    .card-content {
-      padding: 0.8rem;
-      text-align: center;
-    }
-    .btn {
-      background-color: #2e7d32;
-      color: white;
-      border: none;
-      padding: 0.6rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 0.5rem;
-    }
-    .btn:disabled {
-      background-color: gray;
-      cursor: not-allowed;
-    }
-  </style>
+  <link rel="shortcut icon" href="imagens/Caixa de presente com laço.png" type="image/x-icon">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lista de Presentes - Casamento</title>
+<style>
+html,body{font-family:'Lato',sans-serif;margin:0;padding:0;background-color:#fff8f0;color:#404040}
+header{background-color:#2e7d32;color:#fff;text-align:center;padding:2rem;font-size:2rem;font-weight:bold;border-bottom:3px solid #d4af37}
+main{max-width:1200px;margin:2rem auto;padding:0 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
+.card{background:#fff;border-radius:12px;box-shadow:0 3px 6px rgba(0,0,0,.16);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s;border-top:5px solid #d4af37}
+.card:hover{transform:scale(1.03)}
+.card img{width:100%;height:180px;object-fit:contain;background:#eee} /* Ajuste para caber a imagem perfeitamente */
+.card-content{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.card h3{font-size:1.2rem;margin-bottom:.5rem;color:#2e7d32}
+.card p{font-size:.95rem;color:#555;margin-bottom:.8rem}
+button{background-color:#2e7d32;border:none;color:#fff;padding:.75rem;border-radius:8px;cursor:pointer;font-size:1rem;transition:background .3s}
+button:hover{background-color:#256028}
+button[disabled]{background:#ccc;cursor:not-allowed}
+input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radius:5px;border:1px solid #ccc}
+
+/* Modal (confirm) */
+#confirmModal,#pixModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:center;visibility:hidden;opacity:0;transition:.2s}
+#confirmModal.active,#pixModal.active{visibility:visible;opacity:1}
+.modal{background:#fff;padding:1.5rem;border-radius:12px;max-width:480px;width:90%;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.3);border-top:5px solid #d4af37}
+.modal h2{color:#2e7d32;margin-bottom:.8rem}
+.modal p{margin:.4rem 0}
+.modal .row{display:flex;gap:.5rem;justify-content:center;align-items:center;margin-top:.6rem}
+.copy-btn{background:#d4af37;color:#fff;padding:.5rem 1rem;border-radius:8px;border:none;cursor:pointer}
+.small{font-size:.95rem;color:#666;margin-top:.6rem}
+.success{color:green}
+.error{color:#e84155}
+
+/* Input comprador */
+#compradorWrapper{max-width:480px;margin:1rem auto;text-align:center}
+#nomeComprador{padding:.5rem;width:80%;border-radius:5px;border:1px solid #ccc;font-size:1rem}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Lista de Presentes 💍</h1>
-  </header>
+<header>🎀 Lista de Presentes - Chá De Casa Nova</header>
 
-  <main id="listaProdutos"></main>
+<!-- Input nome do comprador -->
+<div id="compradorWrapper">
+  <input type="text" id="nomeComprador" placeholder="Digite seu nome">
+</div>
 
-  <script>
-    // URL do App Script
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
+<main id="catalogo">
+  <!-- cards preenchidos via JS -->
+</main>
 
-    // Imagens dos produtos
-    const imagensProdutos = {
-      "ARCONDICIONADO": "imagens/ARCONDICIONADO.jpg",
-      "ARMARIO": "imagens/ARMARIO.jpg",
-      "ARMARIODEBANHEIRO": "imagens/ARMARIODEBANHEIRO.jpg",
-      "ARMARIODECOZINHA": "imagens/ARMARIODECOZINHA.jpg",
-      "ASPIRADORDEPO": "imagens/ASPIRADORDEPO.jpg",
-      "BOLEIRADEVIDRO": "imagens/BOLEIRADEVIDRO.jpg",
-      "CABECEIRA": "imagens/CABECEIRA.jpg",
-      "CAPADECOLCHÃOIMPERMEAVEL": "imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg",
-      "CESTODEROUPA": "imagens/CESTODEROUPA.jpg",
-      "CHALEIRA": "imagens/CHALEIRA.jpg",
-      "COLCHAO": "imagens/COLCHAO.jpg",
-      "CORTINA": "imagens/CORTINA.jpg",
-      "EDREDOM": "imagens/EDREDOM.jpg",
-      "ESCORREDORDEINOX": "imagens/ESCORREDORDEINOX.jpg",
-      "ESCORREDORDELOUÇADEPARADE": "imagens/ESCORREDORDELOUÇADEPARADE.jpg",
-      "ESPELHO": "imagens/ESPELHO.jpg",
-      "FERRODEPASSAR": "imagens/FERRODEPASSAR.jpg",
-      "FOGAO": "imagens/FOGAO.jpg",
-      "GARRAFATERMICA": "imagens/GARRAFATERMICA.jpg",
-      "GELADEIRA": "imagens/GELADEIRA.jpg",
-      "JARRADESUCO": "imagens/JARRADESUCO.jpg",
-      "JOGODECANECAS": "imagens/JOGODECANECAS.jpg",
-      "JOGODECOPOSDEVIDRO": "imagens/JOGODECOPOSDEVIDRO.jpg",
-      "JOGODELENÇOL": "imagens/JOGODELENÇOL.jpg",
-      "JOGODEPANELA": "imagens/JOGODEPANELA.jpg",
-      "JOGODEPIREX": "imagens/JOGODEPIREX.jpg",
-      "JOGODEPRATOSPORCELANADO": "imagens/JOGODEPRATOSPORCELANADO.jpg",
-      "JOGODETABULEIROS": "imagens/JOGODETABULEIROS.jpg",
-      "KITSUPORTEDETOALHA": "imagens/KITSUPORTEDETOALHA.jpg",
-      "LIQUIDIFICADOR": "imagens/LIQUIDIFICADOR.jpg",
-      "LIXEIRA": "imagens/LIXEIRA.jpg",
-      "MICROONDAS": "imagens/MICROONDAS.jpg",
-      "MIXER": "imagens/MIXER.jpg",
-      "MOPE": "imagens/MOPE.jpg",
-      "PAINELPARATV": "imagens/PAINELPARATV.jpg",
-      "PANELADEPRESSÃO": "imagens/PANELADEPRESSÃO.jpg",
-      "POTESHERMETICOSJ1": "imagens/POTESHERMETICOSJ1.jpg",
-      "POTESHERMETICOSJ2": "imagens/POTESHERMETICOSJ2.jpg",
-      "RALADOR": "imagens/RALADOR.jpg",
-      "SANDUUICHEIRA": "imagens/SANDUUICHEIRA.jpg",
-      "SAPATEIRA": "imagens/SAPATEIRA.jpg",
-      "SOFÁ": "imagens/SOFÁ.jpg",
-      "SUPORTEHIGIENE": "imagens/SUPORTEHIGIENE.jpg",
-      "TABUADEINOX": "imagens/TABUADEINOX.jpg",
-      "TABUADEPASSAR": "imagens/TABUADEPASSAR.jpg",
-      "TALHERES": "imagens/TALHERES.jpg",
-      "TAPETE": "imagens/TAPETE.jpg",
-      "TELEVISÃO": "imagens/TELEVISÃO.jpg",
-      "TOALHASDEBANHO": "imagens/TOALHASDEBANHO.jpg",
-      "TOALHASDEROSTO": "imagens/TOALHASDEROSTO.jpg",
-      "UTENCILIOSDESILICONE": "imagens/UTENCILIOSDESILICONE.jpg",
-      "VARALCHAO": "imagens/VARALCHAO.jpg",
-      "VARALTETO": "imagens/VARALTETO.jpg"
-    };
+<!-- Modal de confirmação (seleção: mostra nome, quantidade, total e PIX) -->
+<div id="confirmModal">
+  <div class="modal">
+    <h2>Confirmar presente</h2>
+    <p id="conf-nome">Produto: —</p>
+    <p id="conf-qtd">Quantidade: —</p>
+    <p id="conf-unit">Valor unitário: —</p>
+    <p id="conf-total" style="font-weight:700">Total: —</p>
 
-    // Todos os produtos com limite 1
-    const produtos = Object.keys(imagensProdutos).map(nome => ({
-      nome,
-      limite: 1
-    }));
+    <div class="small">Pix para pagamento:</div>
+    <div style="margin:0.5rem 0;">
+      <strong id="pix-key">21 971963818</strong>
+    </div>
 
-    const lista = document.getElementById("listaProdutos");
+    <div class="row">
+      <button class="copy-btn" onclick="copiarPix()">Copiar Pix</button>
+      <button onclick="confirmarCompra()">Confirmar pagamento</button>
+      <button onclick="fecharConfirm()">Cancelar</button>
+    </div>
 
-    function renderProdutos(produtosDisponiveis) {
-      lista.innerHTML = "";
-      produtos.forEach(p => {
-        const esgotado = produtosDisponiveis.includes(p.nome);
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <img src="${imagensProdutos[p.nome]}" alt="${p.nome}">
-          <div class="card-content">
-            <h3>${p.nome}</h3>
-            <input type="text" id="comprador-${p.nome}" placeholder="Seu nome" style="width:90%;padding:5px;"><br>
-            <button class="btn" ${esgotado ? "disabled" : ""} onclick="comprar('${p.nome}', 1, ${p.limite})">
-              ${esgotado ? "Esgotado" : "Presentear 🎁"}
-            </button>
-          </div>
-        `;
-        lista.appendChild(card);
-      });
+    <p id="conf-msg" class="small"></p>
+  </div>
+</div>
+
+<!-- Modal de agradecimento (após sucesso) -->
+<div id="pixModal">
+  <div class="modal">
+    <h2>🎉 Obrigado pela sua contribuição!</h2>
+    <p>Envie o comprovante via WhatsApp (ou aguarde contato).</p>
+    <p class="small">PIX: <strong>21 971963818</strong></p>
+    <div class="row">
+      <button onclick="fecharPix()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==================== Configurações ==================== */
+const PIX_KEY = "21 971963818";
+const UNIT_PRICE = 100;
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
+
+/* ==================== Imagens dos produtos ==================== */
+const imagensProdutos = {
+  "Ar-condicionado": "imagens/ARCONDICIONADO.jpg",
+  "Armário": "imagens/ARMARIO.jpg",
+  "Armário de banheiro": "imagens/ARMARIODEBANHEIRO.jpg",
+  "Armário de cozinha": "imagens/ARMARIODECOZINHA.jpg",
+  "Aspirador de pó": "imagens/ASPIRADORDEPO.jpg",
+  "Boleira de vidro": "imagens/BOLEIRADEVIDRO.jpg",
+  "Capa de almofada": "imagens/CAPADEALMOFADA.jpg",
+  "Cabeceira": "imagens/CABECEIRA.jpg",
+  "Capa de colchão impermeável": "imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg",
+  "Cesto de roupa": "imagens/CESTODEROUPA.jpg",
+  "Chaleira": "imagens/CHALEIRA.jpg",
+  "Colchão de casa D20": "imagens/COLCHAO.jpg",
+  "Cortina": "imagens/CORTINA.jpg",
+  "Edredom": "imagens/EDREDOM.jpg",
+  "Escorredores de inox": "imagens/ESCORREDORDEINOX.jpeg",
+  "Escorredor de louça de parede": "imagens/ESCORREDORDELOUÇADEPARADE.jpg",
+  "Espelho": "imagens/ESPELHO.jpg",
+  "Ferro de passar roupa": "imagens/FERRODEPASSAR.jpg",
+  "Fogão": "imagens/FOGAO.jpg",
+  "Garrafa térmica": "imagens/GARRAFATERMICA.jpg",
+  "Geladeira": "imagens/GELADEIRA.jpg",
+  "Jarra de suco": "imagens/JARRADESUCO.jpg",
+  "Jogo de canecas": "imagens/JOGODECANECAS.jpg",
+  "Jogo de copos de vidro": "imagens/JOGODECOPOSDEVIDRO.jpg",
+  "2 jogos de lençol": "imagens/JOGODELENÇOL.jpg",
+  "Jogo de panela": "imagens/JOGODEPANELA.jpg",
+  "Jogo de pirex": "imagens/JOGODEPIREX.jpg",
+  "Jogo de pratos de porcelanato": "imagens/JOGODEPRATOSPORCELANADO.jpg",
+  "Jogo de tabuleiros": "imagens/JOGODETABULEIROS.jpg",
+  "Kit porta algodão, escova e cotonete + saboneteira": "imagens/Kit porta algodão, escova e cotonete + saboneteira.jpg",
+  "Kits suporte de toalha": "imagens/KITSUPORTEDETOALHA.jpg",
+  "Liquidificador": "imagens/LIQUIDIFICADOR.jpg",
+  "Lixeiras": "imagens/LIXEIRA.jpeg",
+  "Micro-ondas": "imagens/MICROONDAS.jpg",
+  "Máquina de lavar": "imagens/MAQUINADELAVAR.jpeg",
+  "Mixer": "imagens/MIXER.jpg",
+  "Mope": "imagens/MOPE.jpg",
+  "Painel para TV": "imagens/PAINELPARATV.jpg",
+  "Panela de pressão": "imagens/PANELADEPRESSÃO.jpg",
+  "Potes herméticos J1": "imagens/POTESHERMETICOSJ1.jpg",
+  "Potes herméticos J2": "imagens/POTESHERMETICOSJ2.jpg",
+  "Ralador": "imagens/RALADOR.jpg",
+  "Suporte para papel higiênico": "imagens/SUPORTEHIGIENICO.jpeg",
+  "Sexto de roupa": "imagens/SEXTODEROUPA.jpg",
+  "Sanduicheira": "imagens/SANDUUICHEIRA.jpg",
+  "Sapateira": "imagens/SAPATEIRA.jpg",
+  "Sofá": "imagens/SOFÁ.jpg",
+  "Suporte higiene": "imagens/SUPORTEHIGIENE.jpg",
+  "Travesseiros": "imagens/TRAVESSEIRO.jpeg",
+  "Tábua de inox": "imagens/TABUADEINOX.jpg",
+  "Tábua de passar roupa": "imagens/TABUADEPASSAR.jpg",
+  "Talheres": "imagens/TALHERES.jpg",
+  "Tapete": "imagens/TAPETE.jpg",
+  "Televisão": "imagens/TELEVISÃO.jpg",
+  "Toalhas de banho": "imagens/TOALHASDEBANHO.jpg",
+  "Toalhas de rosto": "imagens/TOALHASDEROSTO.jpg",
+  "Utensílios de silicone": "imagens/UTENCILIOSDESILICONE.jpg",
+  "Varal de chão": "imagens/VARALCHAO.jpg",
+  "Varal de teto": "imagens/VARALTETO.jpg"
+};
+
+/* ==================== Produtos ==================== */
+const produtosComLimite = [
+  {nome:"Micro-ondas", limite:6},
+  {nome:"Fogão", limite:10},
+  {nome:"Armário de cozinha", limite:5},
+  {nome:"Geladeira", limite:15},
+  {nome:"Painel para TV", limite:2},
+  {nome:"Sofá", limite:10},
+  {nome:"Televisão", limite:15},
+  {nome:"Ar-condicionado", limite:10},
+  {nome:"Armário", limite:10},
+  {nome:"Colchão de casa D20", limite:3},
+  {nome:"Sapateira", limite:3},
+  {nome:"Máquina de lavar", limite:10},
+  {nome:"Aspirador de pó", limite:3}
+];
+const produtosNormais = [
+  "Sanduicheira","Liquidificador","Mixer","Jogo de canecas","Jogo de pratos de porcelanato",
+  "Utensílios de silicone","Boleira de vidro","Garrafa térmica","Escorredor de louça de parede",
+  "Escorredores de inox","Talheres","Potes herméticos J1","Potes herméticos J2",
+  "Jogo de copos de vidro","Jogo de tabuleiros","Jogo de pirex","Ralador","Tábua de inox",
+  "Lixeiras","Suporte para papel higiênico","Kits suporte de toalha","Espelho","Toalhas de banho",
+  "Toalhas de rosto","Kit porta algodão, escova e cotonete + saboneteira","Cortina","Tapete",
+  "Capa de almofada","Edredom","2 jogos de lençol","Travesseiros","Cabeceira",
+  "Capa de colchão impermeável","Sexto de roupa","Mope","Ferro de passar roupa","Tábua de passar roupa",
+  "Varal de teto","Varal de chão"
+];
+
+const catalogo=document.getElementById("catalogo");
+let escolhidos=JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
+
+/* ==================== Criação de cards ==================== */
+function criarCards(){
+  let id=1;
+  produtosComLimite.forEach(prod=>{
+    const card=criarCard(prod.nome,id,prod.limite);
+    catalogo.appendChild(card);
+    id++;
+  });
+  produtosNormais.forEach(prod=>{
+    const card=criarCard(prod,id,0);
+    catalogo.appendChild(card);
+    id++;
+  });
+}
+
+function criarCard(nome,id,limite){
+  const div=document.createElement("div");
+  div.className="card";
+  div.dataset.id=id;
+  div.dataset.nome=nome;
+  div.dataset.limite=String(limite);
+  const imgSrc = imagensProdutos[nome] || `https://via.placeholder.com/300x180?text=${encodeURIComponent(nome)}`;
+  div.innerHTML=`
+    <img src="${imgSrc}" alt="${nome}">
+    <div class="card-content">
+      <h3>${nome}</h3>
+      <p>${limite>0?'Limite de vales: '+limite:'Produto sem limite'}</p>
+      <input type="number" id="quantidade-${id}" value="1" min="1" ${limite>0?'max="'+limite+'"':''}>
+      <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
+        <button onclick="abrirConfirm(this)">Escolher</button>
+      </div>
+    </div>
+  `;
+  if(escolhidos.includes(String(id))){
+    const btn=div.querySelector("button");
+    btn.textContent="Escolhido"; btn.disabled=true; div.style.opacity=0.6;
+  }
+  return div;
+}
+
+/* ==================== Modal confirmação ==================== */
+const confirmModal=document.getElementById('confirmModal');
+const pixModal=document.getElementById('pixModal');
+let currentSelection=null;
+
+function abrirConfirm(btn){
+  const card=btn.closest('.card');
+  const id=card.dataset.id;
+  const nome=card.dataset.nome;
+  const limite=parseInt(card.dataset.limite);
+  const quantidade=parseInt(document.getElementById(`quantidade-${id}`).value)||1;
+
+  const comprador=document.getElementById("nomeComprador").value.trim();
+  if(!comprador){ alert("Informe seu nome antes de escolher."); return; }
+
+  if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
+  if(limite>0 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
+
+  currentSelection={id:String(id),nome,limite,quantidade,comprador};
+
+  document.getElementById('conf-nome').textContent=`Produto: ${nome}`;
+  document.getElementById('conf-qtd').textContent=`Quantidade: ${quantidade}`;
+  document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${UNIT_PRICE.toFixed(2).replace('.',',')}`;
+  document.getElementById('conf-total').textContent=`Total: R$ ${(UNIT_PRICE*quantidade).toFixed(2).replace('.',',')}`;
+  document.getElementById('pix-key').textContent=PIX_KEY;
+  document.getElementById('conf-msg').textContent='';
+
+  confirmModal.classList.add('active');
+}
+
+function fecharConfirm(){ confirmModal.classList.remove('active'); currentSelection=null; }
+
+function copiarPix(){
+  navigator.clipboard.writeText(PIX_KEY).then(()=>{
+    document.getElementById('conf-msg').textContent='Chave PIX copiada.';
+  }).catch(()=>{
+    document.getElementById('conf-msg').textContent='Não foi possível copiar.';
+  });
+}
+
+/* ==================== Confirmar compra ==================== */
+async function confirmarCompra(){
+  if(!currentSelection) return;
+  const {id,nome,limite,quantidade,comprador}=currentSelection;
+  document.getElementById('conf-msg').textContent='Registrando...';
+
+  try{
+    const params=new URLSearchParams({
+      nome, quantidade:String(quantidade), limite:String(limite), comprador
+    });
+    const res=await fetch(`${SCRIPT_URL}?${params.toString()}`);
+    const data=await res.json();
+    if(data.status==='ok'){
+      escolhidos.push(String(id));
+      localStorage.setItem('itensEscolhidos',JSON.stringify(escolhidos));
+      marcarComoEscolhido(id);
+      fecharConfirm();
+      abrirPixModal();
+    } else{
+      document.getElementById('conf-msg').textContent=data.mensagem||'Erro ao registrar.';
     }
+  } catch(err){
+    console.error(err);
+    document.getElementById('conf-msg').textContent='Erro de comunicação.';
+  }
+}
 
-    async function carregarComprados() {
-      try {
-        const res = await fetch(SCRIPT_URL);
-        const data = await res.json();
-        if (data.status === "ok") {
-          const nomes = data.dados.map(d => d.nome);
-          renderProdutos(nomes);
-        } else {
-          alert("Erro ao carregar os produtos: " + data.mensagem);
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Erro de conexão com o servidor.");
-      }
-    }
+/* ==================== Helpers UI ==================== */
+function marcarComoEscolhido(id){
+  const card=document.querySelector(`.card[data-id="${id}"]`);
+  if(!card) return;
+  const btn=card.querySelector('button');
+  btn.textContent='Escolhido'; btn.disabled=true; card.style.opacity=0.6;
+}
+function abrirPixModal(){ pixModal.classList.add('active'); }
+function fecharPix(){ pixModal.classList.remove('active'); }
 
-    async function comprar(nome, quantidade, limite) {
-      const comprador = document.getElementById(`comprador-${nome}`).value.trim();
-      if (!comprador) {
-        alert("Por favor, insira seu nome antes de comprar.");
-        return;
-      }
-
-      const params = new URLSearchParams({
-        nome,
-        quantidade,
-        limite,
-        comprador
-      });
-
-      try {
-        const res = await fetch(SCRIPT_URL, { method: "POST", body: params });
-        const data = await res.json();
-        if (data.status === "ok") {
-          alert("Compra registrada com sucesso! Obrigado 💚");
-          carregarComprados();
-        } else {
-          alert(data.mensagem);
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Erro de conexão ao registrar a compra.");
-      }
-    }
-
-    carregarComprados();
-  </script>
+/* ==================== Inicialização ==================== */
+criarCards();
+document.querySelectorAll('.card').forEach(card=>{
+  const id=String(card.dataset.id);
+  if(escolhidos.includes(id)) marcarComoEscolhido(id);
+});
+</script>
 </body>
 </html>
