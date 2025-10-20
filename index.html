@@ -115,15 +115,15 @@ const produtos = [
 {name:"Espelho", valor:80, img:"imagens/ESPELHO.jpg", limite:5},
 {name:"Toalhas de banho", valor:100, img:"imagens/TOALHASDEBANHO.jpg", limite:5},
 {name:"Toalhas de rosto", valor:50, img:"imagens/TOALHASDEROSTO.jpg", limite:5},
-{name:"Kit porta algodão, escova e cotonete + saboneteira", valor:70, img:"imagens/Kit_porta_algodao_escova_cotonete_saboneteira.jpg", limite:5},
+{name:"Kit porta algodão, escova e cotonete + saboneteira", valor:70, img:"imagens/KITPORTAALGO.jpg", limite:5},
 {name:"Cortina", valor:100, img:"imagens/CORTINA.jpg", limite:5},
 {name:"Tapete", valor:70, img:"imagens/TAPETE.jpg", limite:5},
 {name:"Capa de almofada", valor:90, img:"imagens/CAPADEALMOFADA.jpg", limite:5},
 {name:"Edredom", valor:120, img:"imagens/EDREDOM.jpg", limite:5},
-{name:"2 jogos de lençol", valor:70, img:"imagens/JOGODELENCOL.jpg", limite:5},
+{name:"2 jogos de lençol", valor:70, img:"imagens/JOGODELENÇOL.jpg", limite:5},
 {name:"Travesseiros", valor:75, img:"imagens/TRAVESSEIRO.jpeg", limite:5},
 {name:"Cabeceira", valor:60, img:"imagens/CABECEIRA.jpg", limite:5},
-{name:"Capa de colchão impermeável", valor:50, img:"imagens/CAPADECOLCHAOIMPERMEAVEL.jpg", limite:5},
+{name:"Capa de colchão impermeável", valor:50, img:"imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg", limite:5},
 {name:"Sexto de roupa", valor:50, img:"imagens/SEXTODEROUPA.jpg", limite:5},
 {name:"Mope", valor:50, img:"imagens/MOPE.jpg", limite:5},
 {name:"Ferro de passar roupa", valor:110, img:"imagens/FERRODEPASSAR.jpg", limite:5},
@@ -142,12 +142,16 @@ function criarCards(){
     const div=document.createElement("div");
     div.className="card";
     div.dataset.id=idx;
+    div.dataset.nome=prod.nome;
+    div.dataset.limite=prod.limite;
+    let inputHTML = prod.limite>1 ? `<input type="number" id="quantidade-${idx}" value="1" min="1" max="${prod.limite}">` : '';
+    const tipoTexto = prod.limite===1 ? 'Item único' : `Limite de vales: ${prod.limite}`;
     div.innerHTML=`
       <img src="${prod.img}" alt="${prod.nome}">
       <div class="card-content">
         <h3>${prod.nome}</h3>
-        <p>${prod.limite===1 ? 'Item único' : `Limite de vales: ${prod.limite}`}</p>
-        ${prod.limite>1 ? `<input type="number" id="quantidade-${idx}" value="1" min="1" max="${prod.limite}">` : ''}
+        <p>${tipoTexto}</p>
+        ${inputHTML}
         <p>Valor unitário: R$ ${prod.valor.toFixed(2).replace('.',',')}</p>
         <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
           <button onclick="abrirConfirm(this)">Escolher</button>
