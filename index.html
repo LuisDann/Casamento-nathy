@@ -78,7 +78,6 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 const PIX_KEY = "21 971963818";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
 
-// Preço de cada item
 const precos = {
   "Sanduicheira":100,"Liquidificador":100,"Mixer":170,"Jogo de canecas":75,
   "Jogo de pratos de porcelanato":100,"Utensílios de silicone":50,"Boleira de vidro":50,
@@ -92,7 +91,6 @@ const precos = {
   "Tábua de passar roupa":100,"Varal de teto":65,"Varal de chão":90
 };
 
-// Imagens
 const imagensProdutos = {
   "Ar-condicionado":"imagens/ARCONDICIONADO.jpg",
   "Armário":"imagens/ARMARIO.jpg",
@@ -153,10 +151,8 @@ const imagensProdutos = {
   "Varal de teto":"imagens/VARALTETO.jpg"
 };
 
-// Lista de itens normais (comprar 1)
 const itensNormais = Object.keys(precos);
 
-// Vales com quantidade limitada
 const vales = [
   {nome:"Micro-ondas", limite:6},{nome:"Fogão", limite:10},{nome:"Armário de cozinha", limite:5},
   {nome:"Geladeira", limite:15},{nome:"Painel para TV", limite:2},{nome:"Sofá", limite:10},
@@ -171,18 +167,16 @@ let escolhidos = JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
 function criarCards(){
   let id=1;
 
-  // Seção Itens Normais
   const tituloItens = document.createElement('div');
   tituloItens.className='titulo-secao';
   tituloItens.textContent='🎁 Itens Normais';
   catalogo.appendChild(tituloItens);
   itensNormais.forEach(nome=>{
-    const card = criarCard(nome,id,1); // quantidade máxima 1
+    const card = criarCard(nome,id,1);
     catalogo.appendChild(card);
     id++;
   });
 
-  // Seção Vales
   const tituloVales=document.createElement('div');
   tituloVales.className='titulo-secao';
   tituloVales.textContent='🎟️ Vales';
@@ -207,7 +201,7 @@ function criarCard(nome,id,limite){
     <div class="card-content">
       <h3>${nome}</h3>
       <p>${limite>1?'Quantidade disponível: '+limite:'Quantidade: 1'}</p>
-      <input type="number" id="quantidade-${id}" value="1" min="1" ${limite>1?'max="'+limite+'" readonly':'max="1" readonly'}>
+      <input type="number" id="quantidade-${id}" value="1" min="1" max="${limite}">
       <p>Valor unitário: R$ ${preco.toFixed(2).replace('.',',')}</p>
       <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
         <button onclick="abrirConfirm(this)">Escolher</button>
