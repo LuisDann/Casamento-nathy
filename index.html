@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Lista de Presentes - Casamento</title>
-<link rel="shortcut icon" href="imagens/Caixa de presente com laço.png" type="image/x-icon">
+<link rel="shortcut icon" href="imagens/Caixa_de_presente_com_laco.png" type="image/x-icon">
 <style>
 html,body{font-family:'Montserrat',sans-serif;margin:0;padding:0;background-color:#fefcf8;color:#333}
 header{background-color:#4a7c59;color:#fff;text-align:center;padding:2rem;font-size:2rem;font-weight:700;border-bottom:3px solid #c9a66b;letter-spacing:1px}
@@ -83,7 +83,7 @@ const produtos = [
 {name:"Armário de cozinha", valor:100, img:"imagens/ARMARIODECOZINHA.jpg", limite:5},
 {name:"Geladeira", valor:100, img:"imagens/GELADEIRA.jpg", limite:15},
 {name:"Painel para TV", valor:100, img:"imagens/PAINELPARATV.jpg", limite:2},
-{name:"Sofá", valor:100, img:"imagens/SOFÁ.jpg", limite:10},
+{name:"Sofá", valor:100, img:"imagens/SOFA.jpg", limite:10},
 {name:"Televisão", valor:100, img:"imagens/TELEVISÃO.jpg", limite:15},
 {name:"Ar-condicionado", valor:100, img:"imagens/ARCONDICIONADO.jpg", limite:10},
 {name:"Armário", valor:100, img:"imagens/ARMARIO.jpg", limite:10},
@@ -99,7 +99,7 @@ const produtos = [
 {name:"Utensílios de silicone", valor:50, img:"imagens/UTENCILIOSDESILICONE.jpg", limite:5},
 {name:"Boleira de vidro", valor:50, img:"imagens/BOLEIRADEVIDRO.jpg", limite:5},
 {name:"Garrafa térmica", valor:55, img:"imagens/GARRAFATERMICA.jpg", limite:5},
-{name:"Escorredor de louça de parede", valor:60, img:"imagens/ESCORREDORDELOUÇADEPARADE.jpg", limite:5},
+{name:"Escorredor de louça de parede", valor:60, img:"imagens/ESCORREDORDELOUCADEPARADE.jpg", limite:5},
 {name:"Escorredores de inox", valor:70, img:"imagens/ESCORREDORDEINOX.jpeg", limite:5},
 {name:"Talheres", valor:60, img:"imagens/TALHERES.jpg", limite:5},
 {name:"Potes herméticos J1", valor:90, img:"imagens/POTESHERMETICOSJ1.jpg", limite:5},
@@ -115,15 +115,15 @@ const produtos = [
 {name:"Espelho", valor:80, img:"imagens/ESPELHO.jpg", limite:5},
 {name:"Toalhas de banho", valor:100, img:"imagens/TOALHASDEBANHO.jpg", limite:5},
 {name:"Toalhas de rosto", valor:50, img:"imagens/TOALHASDEROSTO.jpg", limite:5},
-{name:"Kit porta algodão, escova e cotonete + saboneteira", valor:70, img:"imagens/Kit porta algodão, escova e cotonete + saboneteira.jpg", limite:1},
+{name:"Kit porta algodão, escova e cotonete + saboneteira", valor:70, img:"imagens/Kit_porta_algodao_escova_cotonete_saboneteira.jpg", limite:5},
 {name:"Cortina", valor:100, img:"imagens/CORTINA.jpg", limite:5},
 {name:"Tapete", valor:70, img:"imagens/TAPETE.jpg", limite:5},
 {name:"Capa de almofada", valor:90, img:"imagens/CAPADEALMOFADA.jpg", limite:5},
 {name:"Edredom", valor:120, img:"imagens/EDREDOM.jpg", limite:5},
-{name:"2 jogos de lençol", valor:70, img:"imagens/JOGODELENÇOL.jpg", limite:5},
+{name:"2 jogos de lençol", valor:70, img:"imagens/JOGODELENCOL.jpg", limite:5},
 {name:"Travesseiros", valor:75, img:"imagens/TRAVESSEIRO.jpeg", limite:5},
 {name:"Cabeceira", valor:60, img:"imagens/CABECEIRA.jpg", limite:5},
-{name:"Capa de colchão impermeável", valor:50, img:"imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg", limite:5},
+{name:"Capa de colchão impermeável", valor:50, img:"imagens/CAPADECOLCHAOIMPERMEAVEL.jpg", limite:5},
 {name:"Sexto de roupa", valor:50, img:"imagens/SEXTODEROUPA.jpg", limite:5},
 {name:"Mope", valor:50, img:"imagens/MOPE.jpg", limite:5},
 {name:"Ferro de passar roupa", valor:110, img:"imagens/FERRODEPASSAR.jpg", limite:5},
@@ -133,23 +133,19 @@ const produtos = [
 {name:"Jogo de panelas", valor:100, img:"imagens/JOGODEPANELA.jpg", limite:6}
 ];
 
-const catalogoElem=document.getElementById("catalogo");
+const catalogo=document.getElementById("catalogo");
 let escolhidos=JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
 
 function criarCards(){
-  catalogoElem.innerHTML="";
+  catalogo.innerHTML="";
   produtos.forEach((prod,idx)=>{
     const div=document.createElement("div");
     div.className="card";
     div.dataset.id=idx;
     div.dataset.nome=prod.nome;
     div.dataset.limite=prod.limite;
-
-    let inputHTML = prod.limite>1 ? 
-      `<input type="number" id="quantidade-${idx}" value="1" min="1" max="${prod.limite}">` :
-      `<input type="number" id="quantidade-${idx}" value="1" min="1" max="1" readonly>`;
+    let inputHTML = prod.limite>1 ? `<input type="number" id="quantidade-${idx}" value="1" min="1" max="${prod.limite}">` : '';
     const tipoTexto = prod.limite===1 ? 'Item único' : `Limite de vales: ${prod.limite}`;
-    
     div.innerHTML=`
       <img src="${prod.img}" alt="${prod.nome}">
       <div class="card-content">
@@ -165,7 +161,7 @@ function criarCards(){
     if(escolhidos.includes(String(idx))){
       const btn=div.querySelector("button"); btn.textContent="Escolhido"; btn.disabled=true; div.style.opacity=0.6;
     }
-    catalogoElem.appendChild(div);
+    catalogo.appendChild(div);
   });
 }
 
@@ -175,24 +171,20 @@ const pixModal=document.getElementById('pixModal');
 
 function abrirConfirm(btn){
   const card=btn.closest('.card');
-  const id=parseInt(card.dataset.id);
-  const prod = produtos[id];
+  const id=card.dataset.id;
+  const nome=card.dataset.nome;
   const limite=parseInt(card.dataset.limite);
-  let quantidade = parseInt(document.getElementById(`quantidade-${id}`).value) || 1;
-
-  if(quantidade < 1) quantidade = 1;
-  if(limite===1) quantidade = 1;
-  if(quantidade>limite) quantidade = limite;
-
+  let quantidade = limite>1 ? parseInt(document.getElementById(`quantidade-${id}`).value)||1 : 1;
   const comprador=document.getElementById("nomeComprador").value.trim();
   if(!comprador){ alert("Informe seu nome antes de escolher."); return; }
+  if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
+  if(limite>1 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
 
-  currentSelection={id, nome:prod.nome, limite, quantidade, comprador};
-  
-  document.getElementById('conf-nome').textContent=`Produto: ${prod.nome}`;
+  currentSelection={id,nome,limite,quantidade,comprador};
+  document.getElementById('conf-nome').textContent=`Produto: ${nome}`;
   document.getElementById('conf-qtd').textContent=`Quantidade: ${quantidade}`;
-  document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${prod.valor.toFixed(2).replace('.',',')}`;
-  document.getElementById('conf-total').textContent=`Total: R$ ${(prod.valor*quantidade).toFixed(2).replace('.',',')}`;
+  document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${produtos[id].valor.toFixed(2).replace('.',',')}`;
+  document.getElementById('conf-total').textContent=`Total: R$ ${(produtos[id].valor*quantidade).toFixed(2).replace('.',',')}`;
   document.getElementById('conf-comprador').textContent=`Comprador: ${comprador}`;
   document.getElementById('pix-key').textContent=PIX_KEY;
   document.getElementById('conf-msg').textContent='';
@@ -200,12 +192,7 @@ function abrirConfirm(btn){
 }
 
 function fecharConfirm(){ confirmModal.classList.remove('active'); currentSelection=null; }
-
-function copiarPix(){ 
-  navigator.clipboard.writeText(PIX_KEY)
-    .then(()=>{document.getElementById('conf-msg').textContent='Chave PIX copiada.'})
-    .catch(()=>{document.getElementById('conf-msg').textContent='Não foi possível copiar.'}); 
-}
+function copiarPix(){ navigator.clipboard.writeText(PIX_KEY).then(()=>{document.getElementById('conf-msg').textContent='Chave PIX copiada.'}).catch(()=>{document.getElementById('conf-msg').textContent='Não foi possível copiar.'}); }
 
 async function confirmarCompra(){
   if(!currentSelection) return;
@@ -221,22 +208,14 @@ async function confirmarCompra(){
       marcarComoEscolhido(id);
       fecharConfirm();
       abrirPixModal();
-    } else{
-      document.getElementById('conf-msg').textContent=data.mensagem||'Erro ao registrar.';
-    }
-  } catch(err){
-    console.error(err);
-    document.getElementById('conf-msg').textContent='Erro de comunicação.';
-  }
+    } else{ document.getElementById('conf-msg').textContent=data.mensagem||'Erro ao registrar.'; }
+  } catch(err){ console.error(err); document.getElementById('conf-msg').textContent='Erro de comunicação.'; }
 }
 
 function marcarComoEscolhido(id){
   const card=document.querySelector(`.card[data-id="${id}"]`);
   if(!card) return;
-  const btn=card.querySelector('button'); 
-  btn.textContent='Escolhido'; 
-  btn.disabled=true; 
-  card.style.opacity=0.6;
+  const btn=card.querySelector('button'); btn.textContent='Escolhido'; btn.disabled=true; card.style.opacity=0.6;
 }
 
 function abrirPixModal(){ pixModal.classList.add('active'); }
@@ -244,6 +223,5 @@ function fecharPix(){ pixModal.classList.remove('active'); }
 
 criarCards();
 </script>
-
 </body>
 </html>
