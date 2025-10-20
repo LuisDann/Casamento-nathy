@@ -6,35 +6,33 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Lista de Presentes - Casamento</title>
   <style>
-html,body{font-family:'Lato',sans-serif;margin:0;padding:0;background-color:#fff8f0;color:#404040}
-header{background-color:#2e7d32;color:#fff;text-align:center;padding:2rem;font-size:2rem;font-weight:bold;border-bottom:3px solid #d4af37}
-main{max-width:1200px;margin:2rem auto;padding:0 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
-.card{background:#fff;border-radius:12px;box-shadow:0 3px 6px rgba(0,0,0,.16);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s;border-top:5px solid #d4af37}
-.card:hover{transform:scale(1.03)}
-.card img{width:100%;height:180px;object-fit:contain;background:#eee}
-.card-content{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:space-between}
-.card h3{font-size:1.2rem;margin-bottom:.5rem;color:#2e7d32}
-.card p{font-size:.95rem;color:#555;margin-bottom:.8rem}
-button{background-color:#2e7d32;border:none;color:#fff;padding:.75rem;border-radius:8px;cursor:pointer;font-size:1rem;transition:background .3s}
-button:hover{background-color:#256028}
-button[disabled]{background:#ccc;cursor:not-allowed}
-input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radius:5px;border:1px solid #ccc}
+    html,body{font-family:'Lato',sans-serif;margin:0;padding:0;background-color:#fff8f0;color:#404040}
+    header{background-color:#2e7d32;color:#fff;text-align:center;padding:2rem;font-size:2rem;font-weight:bold;border-bottom:3px solid #d4af37}
+    main{max-width:1200px;margin:2rem auto;padding:0 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
+    .card{background:#fff;border-radius:12px;box-shadow:0 3px 6px rgba(0,0,0,.16);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s;border-top:5px solid #d4af37}
+    .card:hover{transform:scale(1.03)}
+    .card img{width:100%;height:180px;object-fit:contain;background:#eee}
+    .card-content{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+    .card h3{font-size:1.2rem;margin-bottom:.5rem;color:#2e7d32}
+    .card p{font-size:.95rem;color:#555;margin-bottom:.8rem}
+    button{background-color:#2e7d32;border:none;color:#fff;padding:.75rem;border-radius:8px;cursor:pointer;font-size:1rem;transition:background .3s}
+    button:hover{background-color:#256028}
+    button[disabled]{background:#ccc;cursor:not-allowed}
+    input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radius:5px;border:1px solid #ccc}
 
-/* Modal (confirm) */
-#confirmModal,#pixModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:center;visibility:hidden;opacity:0;transition:.2s}
-#confirmModal.active,#pixModal.active{visibility:visible;opacity:1}
-.modal{background:#fff;padding:1.5rem;border-radius:12px;max-width:480px;width:90%;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.3);border-top:5px solid #d4af37}
-.modal h2{color:#2e7d32;margin-bottom:.8rem}
-.modal p{margin:.4rem 0}
-.modal .row{display:flex;gap:.5rem;justify-content:center;align-items:center;margin-top:.6rem}
-.copy-btn{background:#d4af37;color:#fff;padding:.5rem 1rem;border-radius:8px;border:none;cursor:pointer}
-.small{font-size:.95rem;color:#666;margin-top:.6rem}
-.success{color:green}
-.error{color:#e84155}
+    #confirmModal,#pixModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:center;visibility:hidden;opacity:0;transition:.2s}
+    #confirmModal.active,#pixModal.active{visibility:visible;opacity:1}
+    .modal{background:#fff;padding:1.5rem;border-radius:12px;max-width:480px;width:90%;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.3);border-top:5px solid #d4af37}
+    .modal h2{color:#2e7d32;margin-bottom:.8rem}
+    .modal p{margin:.4rem 0}
+    .modal .row{display:flex;gap:.5rem;justify-content:center;align-items:center;margin-top:.6rem}
+    .copy-btn{background:#d4af37;color:#fff;padding:.5rem 1rem;border-radius:8px;border:none;cursor:pointer}
+    .small{font-size:.95rem;color:#666;margin-top:.6rem}
+    .success{color:green}
+    .error{color:#e84155}
 
-/* Input comprador */
-#compradorWrapper{max-width:480px;margin:1rem auto;text-align:center}
-#nomeComprador{padding:.5rem;width:80%;border-radius:5px;border:1px solid #ccc;font-size:1rem}
+    #compradorWrapper{max-width:480px;margin:1rem auto;text-align:center}
+    #nomeComprador{padding:.5rem;width:80%;border-radius:5px;border:1px solid #ccc;font-size:1rem}
   </style>
 </head>
 <body>
@@ -44,7 +42,9 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
   <input type="text" id="nomeComprador" placeholder="Digite seu nome">
 </div>
 
-<main id="catalogo"></main>
+<main id="catalogo">
+  <!-- cards preenchidos via JS -->
+</main>
 
 <div id="confirmModal">
   <div class="modal">
@@ -186,7 +186,7 @@ function criarCards(){
     id++;
   });
   produtosNormais.forEach(prod=>{
-    const card=criarCard(prod,id,1); // <-- todos com limite 1
+    const card=criarCard(prod,id,1); // limite = 1, são itens
     catalogo.appendChild(card);
     id++;
   });
@@ -198,21 +198,33 @@ function criarCard(nome,id,limite){
   div.dataset.id=id;
   div.dataset.nome=nome;
   div.dataset.limite=String(limite);
+
   const imgSrc = imagensProdutos[nome] || `https://via.placeholder.com/300x180?text=${encodeURIComponent(nome)}`;
+
+  let inputHTML = '';
+  if(limite > 1){
+    inputHTML = `<input type="number" id="quantidade-${id}" value="1" min="1" max="${limite}">`;
+  }
+
+  const tipoTexto = limite === 1 ? 'Item' : `Limite de vales: ${limite}`;
+
   div.innerHTML=`
     <img src="${imgSrc}" alt="${nome}">
     <div class="card-content">
       <h3>${nome}</h3>
-      <p>${limite>0?'Limite de vales: '+limite:'Produto sem limite'}</p>
-      <input type="number" id="quantidade-${id}" value="1" min="1" max="${limite}">
+      <p>${tipoTexto}</p>
+      ${inputHTML}
       <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
         <button onclick="abrirConfirm(this)">Escolher</button>
       </div>
     </div>
   `;
+
   if(escolhidos.includes(String(id))){
     const btn=div.querySelector("button");
-    btn.textContent="Escolhido"; btn.disabled=true; div.style.opacity=0.6;
+    btn.textContent="Escolhido"; 
+    btn.disabled=true; 
+    div.style.opacity=0.6;
   }
   return div;
 }
@@ -226,13 +238,16 @@ function abrirConfirm(btn){
   const id=card.dataset.id;
   const nome=card.dataset.nome;
   const limite=parseInt(card.dataset.limite);
-  const quantidade=parseInt(document.getElementById(`quantidade-${id}`).value)||1;
+  let quantidade = 1;
+  if(limite > 1){
+    quantidade = parseInt(document.getElementById(`quantidade-${id}`).value)||1;
+  }
 
   const comprador=document.getElementById("nomeComprador").value.trim();
   if(!comprador){ alert("Informe seu nome antes de escolher."); return; }
 
   if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
-  if(limite>0 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
+  if(limite>1 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
 
   currentSelection={id:String(id),nome,limite,quantidade,comprador};
 
@@ -247,13 +262,8 @@ function abrirConfirm(btn){
 }
 
 function fecharConfirm(){ confirmModal.classList.remove('active'); currentSelection=null; }
-
 function copiarPix(){
-  navigator.clipboard.writeText(PIX_KEY).then(()=>{
-    document.getElementById('conf-msg').textContent='Chave PIX copiada.';
-  }).catch(()=>{
-    document.getElementById('conf-msg').textContent='Não foi possível copiar.';
-  });
+  navigator.clipboard.writeText(PIX_KEY).then(()=>{document.getElementById('conf-msg').textContent='Chave PIX copiada.'}).catch(()=>{document.getElementById('conf-msg').textContent='Não foi possível copiar.'});
 }
 
 async function confirmarCompra(){
@@ -262,9 +272,7 @@ async function confirmarCompra(){
   document.getElementById('conf-msg').textContent='Registrando...';
 
   try{
-    const params=new URLSearchParams({
-      nome, quantidade:String(quantidade), limite:String(limite), comprador
-    });
+    const params=new URLSearchParams({nome, quantidade:String(quantidade), limite:String(limite), comprador});
     const res=await fetch(`${SCRIPT_URL}?${params.toString()}`);
     const data=await res.json();
     if(data.status==='ok'){
@@ -292,10 +300,7 @@ function abrirPixModal(){ pixModal.classList.add('active'); }
 function fecharPix(){ pixModal.classList.remove('active'); }
 
 criarCards();
-document.querySelectorAll('.card').forEach(card=>{
-  const id=String(card.dataset.id);
-  if(escolhidos.includes(id)) marcarComoEscolhido(id);
-});
+document.querySelectorAll('.card').forEach(card=>{ const id=String(card.dataset.id); if(escolhidos.includes(id)) marcarComoEscolhido(id); });
 </script>
 </body>
 </html>
