@@ -78,112 +78,106 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 const PIX_KEY = "21 971963818";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
 
-// Preços dos produtos
+// Definindo os preços de cada produto (se não definido, preço = 100)
 const precosProdutos = {
-  "Sanduicheira": 100,
-  "Liquidificador": 100,
-  "Mixer": 170,
-  "Jogo de canecas": 75,
-  "Jogo de pratos de porcelanato": 100,
-  "Utensílios de silicone": 50,
-  "Boleira de vidro": 50,
-  "Garrafa térmica": 55,
-  "Escorredor de louça de parede": 60,
-  "Escorredores de inox": 70,
-  "Talheres": 60,
-  "Potes herméticos J1": 90,
-  "Potes herméticos J2": 105,
-  "Jogo de copos de vidro": 65,
-  "Jogo de tabuleiros": 85,
-  "Jogo de pirex": 100,
-  "Ralador": 50,
-  "Tábua de inox": 50,
-  "Lixeiras": 55,
-  "Suporte para papel higiênico": 55,
-  "Kits suporte de toalha": 75,
-  "Espelho": 80,
-  "Toalhas de banho": 100,
-  "Toalhas de rosto": 50,
-  "Kit porta algodão, escova e cotonete + saboneteira": 70,
-  "Tapete": 70,
-  "Capa de almofada": 90,
-  "Edredom": 120,
-  "2 jogos de lençol": 70,
-  "Travesseiros": 75,
-  "Cabeceira": 60,
-  "Capa de colchão impermeável": 50,
-  "Seixo de roupa": 50,
-  "Mope": 50,
-  "Ferro de passar roupa": 110,
-  "Varal de teto": 65,
-  "Varal de chão": 90
+  "Mixer":170,
+  "Jogo de canecas":75,
+  "Utensílios de silicone":50,
+  "Boleira de vidro":50,
+  "Garrafa térmica":55,
+  "Escorredor de louça de parede":60,
+  "Escorredores de inox":70,
+  "Talheres":60,
+  "Potes herméticos J1":90,
+  "Potes herméticos J2":105,
+  "Jogo de copos de vidro":65,
+  "Jogo de tabuleiros":85,
+  "Ralador":50,
+  "Tábua de inox":50,
+  "Lixeiras":55,
+  "Suporte para papel higiênico":55,
+  "Kits suporte de toalha":75,
+  "Espelho":80,
+  "Toalhas de rosto":50,
+  "Kit porta algodão, escova e cotonete + saboneteira":70,
+  "Tapete":70,
+  "Capa de almofada":90,
+  "Edredom":120,
+  "2 jogos de lençol":70,
+  "Travesseiros":75,
+  "Cabeceira":60,
+  "Capa de colchão impermeável":50,
+  "Varal de teto":65,
+  "Varal de chão":90,
+  "Ferro de passar roupa":110,
+  "Sexto de roupa":50,
+  "Mope":50
 };
 
-// Imagens dos produtos
 const imagensProdutos = {
-  "Ar-condicionado": "imagens/ARCONDICIONADO.jpg",
-  "Armário": "imagens/ARMARIO.jpg",
-  "Armário de banheiro": "imagens/ARMARIODEBANHEIRO.jpg",
-  "Armário de cozinha": "imagens/ARMARIODECOZINHA.jpg",
-  "Aspirador de pó": "imagens/ASPIRADORDEPO.jpg",
-  "Boleira de vidro": "imagens/BOLEIRADEVIDRO.jpg",
-  "Capa de almofada": "imagens/CAPADEALMOFADA.jpg",
-  "Cabeceira": "imagens/CABECEIRA.jpg",
-  "Capa de colchão impermeável": "imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg",
-  "Cesto de roupa": "imagens/CESTODEROUPA.jpg",
-  "Chaleira": "imagens/CHALEIRA.jpg",
-  "Colchão de casa D20": "imagens/COLCHAO.jpg",
-  "Cortina": "imagens/CORTINA.jpg",
-  "Edredom": "imagens/EDREDOM.jpg",
-  "Escorredores de inox": "imagens/ESCORREDORDEINOX.jpeg",
-  "Escorredor de louça de parede": "imagens/ESCORREDORDELOUÇADEPARADE.jpg",
-  "Espelho": "imagens/ESPELHO.jpg",
-  "Ferro de passar roupa": "imagens/FERRODEPASSAR.jpg",
-  "Fogão": "imagens/FOGAO.jpg",
-  "Garrafa térmica": "imagens/GARRAFATERMICA.jpg",
-  "Geladeira": "imagens/GELADEIRA.jpg",
-  "Jarra de suco": "imagens/JARRADESUCO.jpg",
-  "Jogo de canecas": "imagens/JOGODECANECAS.jpg",
-  "Jogo de copos de vidro": "imagens/JOGODECOPOSDEVIDRO.jpg",
-  "2 jogos de lençol": "imagens/JOGODELENÇOL.jpg",
-  "Jogo de panela": "imagens/JOGODEPANELA.jpg",
-  "Jogo de pirex": "imagens/JOGODEPIREX.jpg",
-  "Jogo de pratos de porcelanato": "imagens/JOGODEPRATOSPORCELANADO.jpg",
-  "Jogo de tabuleiros": "imagens/JOGODETABULEIROS.jpg",
-  "Kit porta algodão, escova e cotonete + saboneteira": "imagens/Kit porta algodão, escova e cotonete + saboneteira.jpg",
-  "Kits suporte de toalha": "imagens/KITSUPORTEDETOALHA.jpg",
-  "Liquidificador": "imagens/LIQUIDIFICADOR.jpg",
-  "Lixeiras": "imagens/LIXEIRA.jpeg",
-  "Micro-ondas": "imagens/MICROONDAS.jpg",
-  "Máquina de lavar": "imagens/MAQUINADELAVAR.jpeg",
-  "Mixer": "imagens/MIXER.jpg",
-  "Mope": "imagens/MOPE.jpg",
-  "Painel para TV": "imagens/PAINELPARATV.jpg",
-  "Panela de pressão": "imagens/PANELADEPRESSÃO.jpg",
-  "Potes herméticos J1": "imagens/POTESHERMETICOSJ1.jpg",
-  "Potes herméticos J2": "imagens/POTESHERMETICOSJ2.jpg",
-  "Ralador": "imagens/RALADOR.jpg",
-  "Suporte para papel higiênico": "imagens/SUPORTEHIGIENICO.jpeg",
-  "Sanduicheira": "imagens/SANDUUICHEIRA.jpg",
-  "Sapateira": "imagens/SAPATEIRA.jpg",
-  "Sofá": "imagens/SOFÁ.jpg",
-  "Suporte higiene": "imagens/SUPORTEHIGIENE.jpg",
-  "Travesseiros": "imagens/TRAVESSEIRO.jpeg",
-  "Tábua de inox": "imagens/TABUADEINOX.jpg",
-  "Tábua de passar roupa": "imagens/TABUADEPASSAR.jpg",
-  "Talheres": "imagens/TALHERES.jpg",
-  "Tapete": "imagens/TAPETE.jpg",
-  "Televisão": "imagens/TELEVISÃO.jpg",
-  "Toalhas de banho": "imagens/TOALHASDEBANHO.jpg",
-  "Toalhas de rosto": "imagens/TOALHASDEROSTO.jpg",
-  "Utensílios de silicone": "imagens/UTENCILIOSDESILICONE.jpg",
-  "Varal de chão": "imagens/VARALCHAO.jpg",
-  "Varal de teto": "imagens/VARALTETO.jpg"
+  "Ar-condicionado":"imagens/ARCONDICIONADO.jpg",
+  "Armário":"imagens/ARMARIO.jpg",
+  "Armário de banheiro":"imagens/ARMARIODEBANHEIRO.jpg",
+  "Armário de cozinha":"imagens/ARMARIODECOZINHA.jpg",
+  "Aspirador de pó":"imagens/ASPIRADORDEPO.jpg",
+  "Boleira de vidro":"imagens/BOLEIRADEVIDRO.jpg",
+  "Capa de almofada":"imagens/CAPADEALMOFADA.jpg",
+  "Cabeceira":"imagens/CABECEIRA.jpg",
+  "Capa de colchão impermeável":"imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg",
+  "Cesto de roupa":"imagens/CESTODEROUPA.jpg",
+  "Chaleira":"imagens/CHALEIRA.jpg",
+  "Colchão de casa D20":"imagens/COLCHAO.jpg",
+  "Cortina":"imagens/CORTINA.jpg",
+  "Edredom":"imagens/EDREDOM.jpg",
+  "Escorredores de inox":"imagens/ESCORREDORDEINOX.jpeg",
+  "Escorredor de louça de parede":"imagens/ESCORREDORDELOUÇADEPARADE.jpg",
+  "Espelho":"imagens/ESPELHO.jpg",
+  "Ferro de passar roupa":"imagens/FERRODEPASSAR.jpg",
+  "Fogão":"imagens/FOGAO.jpg",
+  "Garrafa térmica":"imagens/GARRAFATERMICA.jpg",
+  "Geladeira":"imagens/GELADEIRA.jpg",
+  "Jarra de suco":"imagens/JARRADESUCO.jpg",
+  "Jogo de canecas":"imagens/JOGODECANECAS.jpg",
+  "Jogo de copos de vidro":"imagens/JOGODECOPOSDEVIDRO.jpg",
+  "2 jogos de lençol":"imagens/JOGODELENÇOL.jpg",
+  "Jogo de panela":"imagens/JOGODEPANELA.jpg",
+  "Jogo de pirex":"imagens/JOGODEPIREX.jpg",
+  "Jogo de pratos de porcelanato":"imagens/JOGODEPRATOSPORCELANADO.jpg",
+  "Jogo de tabuleiros":"imagens/JOGODETABULEIROS.jpg",
+  "Kit porta algodão, escova e cotonete + saboneteira":"imagens/Kit porta algodão, escova e cotonete + saboneteira.jpg",
+  "Kits suporte de toalha":"imagens/KITSUPORTEDETOALHA.jpg",
+  "Liquidificador":"imagens/LIQUIDIFICADOR.jpg",
+  "Lixeiras":"imagens/LIXEIRA.jpeg",
+  "Micro-ondas":"imagens/MICROONDAS.jpg",
+  "Máquina de lavar":"imagens/MAQUINADELAVAR.jpeg",
+  "Mixer":"imagens/MIXER.jpg",
+  "Mope":"imagens/MOPE.jpg",
+  "Painel para TV":"imagens/PAINELPARATV.jpg",
+  "Panela de pressão":"imagens/PANELADEPRESSÃO.jpg",
+  "Potes herméticos J1":"imagens/POTESHERMETICOSJ1.jpg",
+  "Potes herméticos J2":"imagens/POTESHERMETICOSJ2.jpg",
+  "Ralador":"imagens/RALADOR.jpg",
+  "Suporte para papel higiênico":"imagens/SUPORTEHIGIENICO.jpeg",
+  "Sanduicheira":"imagens/SANDUUICHEIRA.jpg",
+  "Sapateira":"imagens/SAPATEIRA.jpg",
+  "Sofá":"imagens/SOFÁ.jpg",
+  "Suporte higiene":"imagens/SUPORTEHIGIENE.jpg",
+  "Travesseiros":"imagens/TRAVESSEIRO.jpeg",
+  "Tábua de inox":"imagens/TABUADEINOX.jpg",
+  "Tábua de passar roupa":"imagens/TABUADEPASSAR.jpg",
+  "Talheres":"imagens/TALHERES.jpg",
+  "Tapete":"imagens/TAPETE.jpg",
+  "Televisão":"imagens/TELEVISÃO.jpg",
+  "Toalhas de banho":"imagens/TOALHASDEBANHO.jpg",
+  "Toalhas de rosto":"imagens/TOALHASDEROSTO.jpg",
+  "Utensílios de silicone":"imagens/UTENCILIOSDESILICONE.jpg",
+  "Varal de chão":"imagens/VARALCHAO.jpg",
+  "Varal de teto":"imagens/VARALTETO.jpg"
 };
 
-// Vales sem limite
+// Lista de vales
 const vales = [
-  "Sanduicheira","Liquidificador","Jogo de canecas","Jogo de pratos de porcelanato",
+  "Sanduicheira","Liquidificador","Mixer","Jogo de canecas","Jogo de pratos de porcelanato",
   "Utensílios de silicone","Boleira de vidro","Garrafa térmica","Escorredor de louça de parede",
   "Escorredores de inox","Talheres","Potes herméticos J1","Potes herméticos J2",
   "Jogo de copos de vidro","Jogo de tabuleiros","Jogo de pirex","Ralador","Tábua de inox",
@@ -191,82 +185,70 @@ const vales = [
   "Toalhas de rosto","Kit porta algodão, escova e cotonete + saboneteira","Cortina","Tapete",
   "Capa de almofada","Edredom","2 jogos de lençol","Travesseiros","Cabeceira",
   "Capa de colchão impermeável","Cesto de roupa","Mope","Ferro de passar roupa","Tábua de passar roupa",
-  "Varal de teto","Varal de chão","Chaleira","Jarra de suco","Panela de pressão","Suporte higiene"
+  "Varal de teto","Varal de chão","Chaleira","Jarra de suco","Panela de pressão","Suporte higiene","Sexto de roupa"
 ];
 
-// Itens com limite
+// Itens normais (quantidade máxima = 1)
 const itensNormais = [
-  {nome:"Micro-ondas", limite:6},
-  {nome:"Fogão", limite:10},
-  {nome:"Armário de cozinha", limite:5},
-  {nome:"Geladeira", limite:15},
-  {nome:"Painel para TV", limite:2},
-  {nome:"Sofá", limite:10},
-  {nome:"Televisão", limite:15},
-  {nome:"Ar-condicionado", limite:10},
-  {nome:"Armário", limite:10},
-  {nome:"Colchão de casa D20", limite:3},
-  {nome:"Sapateira", limite:3},
-  {nome:"Máquina de lavar", limite:10},
-  {nome:"Aspirador de pó", limite:3}
+  "Micro-ondas","Fogão","Armário de cozinha","Geladeira",
+  "Painel para TV","Sofá","Televisão","Ar-condicionado",
+  "Armário","Colchão de casa D20","Sapateira","Máquina de lavar",
+  "Aspirador de pó","Liquidificador","Mixer","Ferro de passar roupa"
 ];
 
-const catalogo = document.getElementById("catalogo");
-let escolhidos = JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
+const catalogo=document.getElementById("catalogo");
+let escolhidos=JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
 
-function criarCards() {
-  let id = 1;
+function criarCards(){
+  let id=1;
 
   // Seção Vales
-  const tituloVales = document.createElement('div');
-  tituloVales.className = 'titulo-secao';
-  tituloVales.textContent = '🎟️ Vales';
+  const tituloVales=document.createElement('div');
+  tituloVales.className='titulo-secao';
+  tituloVales.textContent='🎟️ Vales';
   catalogo.appendChild(tituloVales);
   vales.forEach(nome=>{
-    const preco = precosProdutos[nome] || 100;
-    const card = criarCard(nome, id, 0, preco);
+    const card=criarCard(nome,id,0);
     catalogo.appendChild(card);
     id++;
   });
 
   // Seção Itens Normais
-  const tituloItens = document.createElement('div');
-  tituloItens.className = 'titulo-secao';
-  tituloItens.textContent = '🎁 Itens Normais';
+  const tituloItens=document.createElement('div');
+  tituloItens.className='titulo-secao';
+  tituloItens.textContent='🎁 Itens Normais';
   catalogo.appendChild(tituloItens);
-  itensNormais.forEach(prod=>{
-    const preco = precosProdutos[prod.nome] || 100;
-    const card = criarCard(prod.nome, id, prod.limite, preco);
+  itensNormais.forEach(nome=>{
+    const card=criarCard(nome,id,1);
     catalogo.appendChild(card);
     id++;
   });
 }
 
-function criarCard(nome, id, limite, preco) {
-  const div = document.createElement("div");
-  div.className = "card";
-  div.dataset.id = id;
-  div.dataset.nome = nome;
-  div.dataset.limite = String(limite);
-  div.dataset.preco = String(preco);
-  const imgSrc = imagensProdutos[nome] || `https://via.placeholder.com/300x180?text=${encodeURIComponent(nome)}`;
-  div.innerHTML = `
+function criarCard(nome,id,limite){
+  const div=document.createElement("div");
+  div.className="card";
+  div.dataset.id=id;
+  div.dataset.nome=nome;
+  div.dataset.limite=String(limite);
+  const imgSrc=imagensProdutos[nome]||`https://via.placeholder.com/300x180?text=${encodeURIComponent(nome)}`;
+  const preco=precosProdutos[nome]||100;
+  div.innerHTML=`
     <img src="${imgSrc}" alt="${nome}">
     <div class="card-content">
       <h3>${nome}</h3>
       <p>${limite>0?'Quantidade: 1':'Produto sem limite'}</p>
-      <input type="number" id="quantidade-${id}" value="1" min="1" ${limite>0?'max="'+limite+'"':''}>
+      <input type="number" id="quantidade-${id}" value="1" min="1" ${limite>0?'max="1"':''}>
       <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
         <button onclick="abrirConfirm(this)">Escolher</button>
       </div>
-      <p style="text-align:center;font-weight:700">R$ ${preco.toFixed(2).replace('.',',')}</p>
     </div>
   `;
   if(escolhidos.includes(String(id))){
-    const btn = div.querySelector("button");
-    btn.textContent = "Escolhido";
-    btn.disabled = true;
-    div.style.opacity = 0.6;
+    const btn=div.querySelector("button");
+    btn.textContent="Escolhido";
+    btn.disabled=true;
+    div.style.opacity=0.6;
   }
   return div;
 }
@@ -276,17 +258,17 @@ const pixModal=document.getElementById('pixModal');
 let currentSelection=null;
 
 function abrirConfirm(btn){
-  const card = btn.closest('.card');
-  const id = card.dataset.id;
-  const nome = card.dataset.nome;
-  const limite = parseInt(card.dataset.limite);
-  const quantidade = parseInt(document.getElementById(`quantidade-${id}`).value)||1;
-  const comprador = document.getElementById("nomeComprador").value.trim();
+  const card=btn.closest('.card');
+  const id=card.dataset.id;
+  const nome=card.dataset.nome;
+  const limite=parseInt(card.dataset.limite);
+  const quantidade=parseInt(document.getElementById(`quantidade-${id}`).value)||1;
+  const comprador=document.getElementById("nomeComprador").value.trim();
   if(!comprador){ alert("Informe seu nome antes de escolher."); return; }
   if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
   if(limite>0 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
-  const preco = parseFloat(card.dataset.preco);
 
+  const preco=precosProdutos[nome]||100;
   currentSelection={id:String(id),nome,limite,quantidade,preco,comprador};
   document.getElementById('conf-nome').textContent=`Produto: ${nome}`;
   document.getElementById('conf-qtd').textContent=`Quantidade: ${quantidade}`;
@@ -299,6 +281,7 @@ function abrirConfirm(btn){
 
 function fecharConfirm(){ confirmModal.classList.remove('active'); currentSelection=null; }
 function copiarPix(){ navigator.clipboard.writeText(PIX_KEY).then(()=>{ document.getElementById('conf-msg').textContent='Chave PIX copiada.'; }).catch(()=>{ document.getElementById('conf-msg').textContent='Não foi possível copiar.'; }); }
+
 async function confirmarCompra(){
   if(!currentSelection) return;
   const {id,nome,limite,quantidade,preco,comprador}=currentSelection;
