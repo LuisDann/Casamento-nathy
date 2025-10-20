@@ -10,7 +10,7 @@ header{background-color:#2e7d32;color:#fff;text-align:center;padding:2rem;font-s
 main{max-width:1200px;margin:2rem auto;padding:0 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
 .card{background:#fff;border-radius:12px;box-shadow:0 3px 6px rgba(0,0,0,.16);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s;border-top:5px solid #d4af37}
 .card:hover{transform:scale(1.03)}
-.card img{width:100%;height:180px;object-fit:cover;background:#eee}
+.card img{width:100%;height:180px;object-fit:contain;background:#eee} /* Ajuste para caber a imagem perfeitamente */
 .card-content{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:space-between}
 .card h3{font-size:1.2rem;margin-bottom:.5rem;color:#2e7d32}
 .card p{font-size:.95rem;color:#555;margin-bottom:.8rem}
@@ -98,6 +98,7 @@ const imagensProdutos = {
   "Armário de cozinha": "imagens/ARMARIODECOZINHA.jpg",
   "Aspirador de pó": "imagens/ASPIRADORDEPO.jpg",
   "Boleira de vidro": "imagens/BOLEIRADEVIDRO.jpg",
+  "Capa de almofada": "imagens/CAPADEALMOFADA.jpg",
   "Cabeceira": "imagens/CABECEIRA.jpg",
   "Capa de colchão impermeável": "imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg",
   "Cesto de roupa": "imagens/CESTODEROUPA.jpg",
@@ -105,7 +106,7 @@ const imagensProdutos = {
   "Colchão de casa D20": "imagens/COLCHAO.jpg",
   "Cortina": "imagens/CORTINA.jpg",
   "Edredom": "imagens/EDREDOM.jpg",
-  "Escorredor de inox": "imagens/ESCORREDORDEINOX.jpg",
+  "Escorredores de inox": "imagens/ESCORREDORDEINOX.jpeg",
   "Escorredor de louça de parede": "imagens/ESCORREDORDELOUÇADEPARADE.jpg",
   "Espelho": "imagens/ESPELHO.jpg",
   "Ferro de passar roupa": "imagens/FERRODEPASSAR.jpg",
@@ -115,15 +116,17 @@ const imagensProdutos = {
   "Jarra de suco": "imagens/JARRADESUCO.jpg",
   "Jogo de canecas": "imagens/JOGODECANECAS.jpg",
   "Jogo de copos de vidro": "imagens/JOGODECOPOSDEVIDRO.jpg",
-  "Jogo de lençol": "imagens/JOGODELENÇOL.jpg",
+  "2 jogos de lençol": "imagens/JOGODELENÇOL.jpg",
   "Jogo de panela": "imagens/JOGODEPANELA.jpg",
   "Jogo de pirex": "imagens/JOGODEPIREX.jpg",
   "Jogo de pratos de porcelanato": "imagens/JOGODEPRATOSPORCELANADO.jpg",
   "Jogo de tabuleiros": "imagens/JOGODETABULEIROS.jpg",
-  "Kit suporte de toalha": "imagens/KITSUPORTEDETOALHA.jpg",
+  "Kit porta algodão, escova e cotonete + saboneteira": "imagens/Kit porta algodão, escova e cotonete + saboneteira.jpg",
+  "Kits suporte de toalha": "imagens/KITSUPORTEDETOALHA.jpg",
   "Liquidificador": "imagens/LIQUIDIFICADOR.jpg",
-  "Lixeira": "imagens/LIXEIRA.jpg",
+  "Lixeiras": "imagens/LIXEIRA.jpeg",
   "Micro-ondas": "imagens/MICROONDAS.jpg",
+  "Máquina de lavar": "imagens/MAQUINADELAVAR.jpeg",
   "Mixer": "imagens/MIXER.jpg",
   "Mope": "imagens/MOPE.jpg",
   "Painel para TV": "imagens/PAINELPARATV.jpg",
@@ -131,10 +134,13 @@ const imagensProdutos = {
   "Potes herméticos J1": "imagens/POTESHERMETICOSJ1.jpg",
   "Potes herméticos J2": "imagens/POTESHERMETICOSJ2.jpg",
   "Ralador": "imagens/RALADOR.jpg",
+  "Suporte para papel higiênico": "imagens/SUPORTEHIGIENICO.jpeg",
+  "Sexto de roupa": "imagens/SEXTODEROUPA.jpg",
   "Sanduicheira": "imagens/SANDUUICHEIRA.jpg",
   "Sapateira": "imagens/SAPATEIRA.jpg",
   "Sofá": "imagens/SOFÁ.jpg",
   "Suporte higiene": "imagens/SUPORTEHIGIENE.jpg",
+  "Travesseiros": "imagens/TRAVESSEIRO.jpeg",
   "Tábua de inox": "imagens/TABUADEINOX.jpg",
   "Tábua de passar roupa": "imagens/TABUADEPASSAR.jpg",
   "Talheres": "imagens/TALHERES.jpg",
