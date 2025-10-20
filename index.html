@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Lista de Presentes - Casamento</title>
-  <link rel="shortcut icon" href="imagens/Caixa de presente com laço.png" type="image/x-icon">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,9 +13,7 @@
   <input type="text" id="nomeComprador" placeholder="Digite seu nome">
 </div>
 
-<main id="catalogo">
-  <!-- cards preenchidos via JS -->
-</main>
+<main id="catalogo"></main>
 
 <div id="confirmModal">
   <div class="modal">
@@ -26,18 +23,15 @@
     <p id="conf-unit">Valor unitário: —</p>
     <p id="conf-total" style="font-weight:700">Total: —</p>
     <p id="conf-comprador">Comprador: —</p>
-
     <div class="small">Pix para pagamento:</div>
     <div style="margin:0.5rem 0;">
-      <strong id="pix-key">21 971963818</strong>
+      <strong id="pix-key"></strong>
     </div>
-
     <div class="row">
       <button class="copy-btn" onclick="copiarPix()">Copiar Pix</button>
       <button onclick="confirmarCompra()">Confirmar pagamento</button>
       <button onclick="fecharConfirm()">Cancelar</button>
     </div>
-
     <p id="conf-msg" class="small"></p>
   </div>
 </div>
