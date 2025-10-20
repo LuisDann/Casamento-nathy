@@ -1,55 +1,55 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lista de Presentes - Casamento</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>🎀 Lista de Presentes - Chá De Casa Nova</header>
+<header>🎀 Lista de Presentes - Chá De Casa Nova</header>
 
-  <!-- Tela para confirmar comprador -->
-  <div id="compradorScreen" class="center-screen">
-    <input type="text" id="nomeCompradorInput" placeholder="Digite seu nome">
-    <button id="confirmarNomeBtn">Confirmar Nome</button>
+<div id="compradorWrapper">
+  <input type="text" id="nomeComprador" placeholder="Digite seu nome">
+</div>
+
+<main id="catalogo"></main>
+
+<div id="confirmModal">
+  <div class="modal">
+    <h2>Confirmar presente</h2>
+    <p id="conf-nome">Produto: —</p>
+    <p id="conf-qtd">Quantidade: —</p>
+    <p id="conf-unit">Valor unitário: —</p>
+    <p id="conf-total" style="font-weight:700">Total: —</p>
+    <p id="conf-comprador">Comprador: —</p>
+
+    <div class="small">Pix para pagamento:</div>
+    <div style="margin:0.5rem 0;">
+      <strong id="pix-key">21 971963818</strong>
+    </div>
+
+    <div class="row">
+      <button class="copy-btn" onclick="copiarPix()">Copiar Pix</button>
+      <button onclick="confirmarCompra()">Confirmar pagamento</button>
+      <button onclick="fecharConfirm()">Cancelar</button>
+    </div>
+
+    <p id="conf-msg" class="small"></p>
   </div>
+</div>
 
-  <!-- Catálogo de produtos -->
-  <main id="catalogo" class="hidden"></main>
-
-  <!-- Modal de confirmação de produto -->
-  <div id="confirmModal" class="modal-backdrop hidden">
-    <div class="modal">
-      <h2>Confirmar presente</h2>
-      <p id="conf-nome">Produto: —</p>
-      <p id="conf-qtd">Quantidade: —</p>
-      <p id="conf-unit">Valor unitário: —</p>
-      <p id="conf-total">Total: —</p>
-      <p id="conf-comprador">Comprador: —</p>
-      <div class="small">Pix para pagamento:</div>
-      <div style="margin:0.5rem 0;"><strong id="pix-key"></strong></div>
-      <div class="row">
-        <button class="copy-btn" onclick="copiarPix()">Copiar Pix</button>
-        <button onclick="confirmarCompra()">Confirmar pagamento</button>
-        <button onclick="fecharConfirm()">Cancelar</button>
-      </div>
-      <p id="conf-msg" class="small"></p>
+<div id="pixModal">
+  <div class="modal">
+    <h2>🎉 Obrigado pela sua contribuição!</h2>
+    <p>Envie o comprovante via WhatsApp (ou aguarde contato).</p>
+    <p class="small">PIX: <strong>21 971963818</strong></p>
+    <div class="row">
+      <button onclick="fecharPix()">Fechar</button>
     </div>
   </div>
+</div>
 
-  <!-- Modal de agradecimento -->
-  <div id="pixModal" class="modal-backdrop hidden">
-    <div class="modal">
-      <h2>🎉 Obrigado pela sua contribuição!</h2>
-      <p>Envie o comprovante via WhatsApp (ou aguarde contato).</p>
-      <p class="small">PIX: <strong>21 971963818</strong></p>
-      <div class="row">
-        <button onclick="fecharPix()">Fechar</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
