@@ -2,16 +2,16 @@
 <html lang="pt-BR">
 <head>
   <link rel="shortcut icon" href="imagens/Caixa de presente com laço.png" type="image/x-icon">
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Lista de Presentes - Casamento</title>
-<style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lista de Presentes - Casamento</title>
+  <style>
 html,body{font-family:'Lato',sans-serif;margin:0;padding:0;background-color:#fff8f0;color:#404040}
 header{background-color:#2e7d32;color:#fff;text-align:center;padding:2rem;font-size:2rem;font-weight:bold;border-bottom:3px solid #d4af37}
 main{max-width:1200px;margin:2rem auto;padding:0 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
 .card{background:#fff;border-radius:12px;box-shadow:0 3px 6px rgba(0,0,0,.16);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s;border-top:5px solid #d4af37}
 .card:hover{transform:scale(1.03)}
-.card img{width:100%;height:180px;object-fit:contain;background:#eee} /* Ajuste para caber a imagem perfeitamente */
+.card img{width:100%;height:180px;object-fit:contain;background:#eee}
 .card-content{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:space-between}
 .card h3{font-size:1.2rem;margin-bottom:.5rem;color:#2e7d32}
 .card p{font-size:.95rem;color:#555;margin-bottom:.8rem}
@@ -35,21 +35,17 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 /* Input comprador */
 #compradorWrapper{max-width:480px;margin:1rem auto;text-align:center}
 #nomeComprador{padding:.5rem;width:80%;border-radius:5px;border:1px solid #ccc;font-size:1rem}
-</style>
+  </style>
 </head>
 <body>
 <header>🎀 Lista de Presentes - Chá De Casa Nova</header>
 
-<!-- Input nome do comprador -->
 <div id="compradorWrapper">
   <input type="text" id="nomeComprador" placeholder="Digite seu nome">
 </div>
 
-<main id="catalogo">
-  <!-- cards preenchidos via JS -->
-</main>
+<main id="catalogo"></main>
 
-<!-- Modal de confirmação (seleção: mostra nome, quantidade, total e PIX) -->
 <div id="confirmModal">
   <div class="modal">
     <h2>Confirmar presente</h2>
@@ -73,7 +69,6 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
   </div>
 </div>
 
-<!-- Modal de agradecimento (após sucesso) -->
 <div id="pixModal">
   <div class="modal">
     <h2>🎉 Obrigado pela sua contribuição!</h2>
@@ -86,12 +81,10 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 </div>
 
 <script>
-/* ==================== Configurações ==================== */
 const PIX_KEY = "21 971963818";
 const UNIT_PRICE = 100;
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
 
-/* ==================== Imagens dos produtos ==================== */
 const imagensProdutos = {
   "Ar-condicionado": "imagens/ARCONDICIONADO.jpg",
   "Armário": "imagens/ARMARIO.jpg",
@@ -154,7 +147,6 @@ const imagensProdutos = {
   "Varal de teto": "imagens/VARALTETO.jpg"
 };
 
-/* ==================== Produtos ==================== */
 const produtosComLimite = [
   {nome:"Micro-ondas", limite:6},
   {nome:"Fogão", limite:10},
@@ -170,6 +162,7 @@ const produtosComLimite = [
   {nome:"Máquina de lavar", limite:10},
   {nome:"Aspirador de pó", limite:3}
 ];
+
 const produtosNormais = [
   "Sanduicheira","Liquidificador","Mixer","Jogo de canecas","Jogo de pratos de porcelanato",
   "Utensílios de silicone","Boleira de vidro","Garrafa térmica","Escorredor de louça de parede",
@@ -185,7 +178,6 @@ const produtosNormais = [
 const catalogo=document.getElementById("catalogo");
 let escolhidos=JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
 
-/* ==================== Criação de cards ==================== */
 function criarCards(){
   let id=1;
   produtosComLimite.forEach(prod=>{
@@ -194,7 +186,7 @@ function criarCards(){
     id++;
   });
   produtosNormais.forEach(prod=>{
-    const card=criarCard(prod,id,0);
+    const card=criarCard(prod,id,1); // <-- todos com limite 1
     catalogo.appendChild(card);
     id++;
   });
@@ -212,7 +204,7 @@ function criarCard(nome,id,limite){
     <div class="card-content">
       <h3>${nome}</h3>
       <p>${limite>0?'Limite de vales: '+limite:'Produto sem limite'}</p>
-      <input type="number" id="quantidade-${id}" value="1" min="1" ${limite>0?'max="'+limite+'"':''}>
+      <input type="number" id="quantidade-${id}" value="1" min="1" max="${limite}">
       <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
         <button onclick="abrirConfirm(this)">Escolher</button>
       </div>
@@ -225,7 +217,6 @@ function criarCard(nome,id,limite){
   return div;
 }
 
-/* ==================== Modal confirmação ==================== */
 const confirmModal=document.getElementById('confirmModal');
 const pixModal=document.getElementById('pixModal');
 let currentSelection=null;
@@ -265,7 +256,6 @@ function copiarPix(){
   });
 }
 
-/* ==================== Confirmar compra ==================== */
 async function confirmarCompra(){
   if(!currentSelection) return;
   const {id,nome,limite,quantidade,comprador}=currentSelection;
@@ -292,7 +282,6 @@ async function confirmarCompra(){
   }
 }
 
-/* ==================== Helpers UI ==================== */
 function marcarComoEscolhido(id){
   const card=document.querySelector(`.card[data-id="${id}"]`);
   if(!card) return;
@@ -302,7 +291,6 @@ function marcarComoEscolhido(id){
 function abrirPixModal(){ pixModal.classList.add('active'); }
 function fecharPix(){ pixModal.classList.remove('active'); }
 
-/* ==================== Inicialização ==================== */
 criarCards();
 document.querySelectorAll('.card').forEach(card=>{
   const id=String(card.dataset.id);
