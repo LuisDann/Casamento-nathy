@@ -78,46 +78,24 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 const PIX_KEY = "21 971963818";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
 
-// Definindo os preços de cada produto (se não definido, preço = 100)
-const precosProdutos = {
-  "Mixer":170,
-  "Jogo de canecas":75,
-  "Utensílios de silicone":50,
-  "Boleira de vidro":50,
-  "Garrafa térmica":55,
-  "Escorredor de louça de parede":60,
-  "Escorredores de inox":70,
-  "Talheres":60,
-  "Potes herméticos J1":90,
-  "Potes herméticos J2":105,
-  "Jogo de copos de vidro":65,
-  "Jogo de tabuleiros":85,
-  "Ralador":50,
-  "Tábua de inox":50,
-  "Lixeiras":55,
-  "Suporte para papel higiênico":55,
-  "Kits suporte de toalha":75,
-  "Espelho":80,
-  "Toalhas de rosto":50,
-  "Kit porta algodão, escova e cotonete + saboneteira":70,
-  "Tapete":70,
-  "Capa de almofada":90,
-  "Edredom":120,
-  "2 jogos de lençol":70,
-  "Travesseiros":75,
-  "Cabeceira":60,
-  "Capa de colchão impermeável":50,
-  "Varal de teto":65,
-  "Varal de chão":90,
-  "Ferro de passar roupa":110,
-  "Sexto de roupa":50,
-  "Mope":50
+// Preço de cada item
+const precos = {
+  "Sanduicheira":100,"Liquidificador":100,"Mixer":170,"Jogo de canecas":75,
+  "Jogo de pratos de porcelanato":100,"Utensílios de silicone":50,"Boleira de vidro":50,
+  "Garrafa térmica":55,"Escorredor de louça de parede":60,"Escorredores de inox":70,
+  "Talheres":60,"Potes herméticos J1":90,"Potes herméticos J2":105,"Jogo de copos de vidro":65,
+  "Jogo de tabuleiros":85,"Jogo de pirex":100,"Ralador":50,"Tábua de inox":50,"Lixeiras":55,
+  "Suporte para papel higiênico":55,"Kits suporte de toalha":75,"Espelho":80,"Toalhas de rosto":50,
+  "Kit porta algodão, escova e cotonete + saboneteira":70,"Cortina":100,"Tapete":70,
+  "Capa almofada":90,"Edredom":120,"2 jogos de lençol":70,"Travesseiros":75,"Cabeceira":60,
+  "Capa de colchão impermeável":50,"Sexto de roupa":50,"Mope":50,"Ferro de passar roupa":110,
+  "Tábua de passar roupa":100,"Varal de teto":65,"Varal de chão":90
 };
 
+// Imagens
 const imagensProdutos = {
   "Ar-condicionado":"imagens/ARCONDICIONADO.jpg",
   "Armário":"imagens/ARMARIO.jpg",
-  "Armário de banheiro":"imagens/ARMARIODEBANHEIRO.jpg",
   "Armário de cozinha":"imagens/ARMARIODECOZINHA.jpg",
   "Aspirador de pó":"imagens/ASPIRADORDEPO.jpg",
   "Boleira de vidro":"imagens/BOLEIRADEVIDRO.jpg",
@@ -175,51 +153,42 @@ const imagensProdutos = {
   "Varal de teto":"imagens/VARALTETO.jpg"
 };
 
-// Lista de vales
+// Lista de itens normais (comprar 1)
+const itensNormais = Object.keys(precos);
+
+// Vales com quantidade limitada
 const vales = [
-  "Sanduicheira","Liquidificador","Mixer","Jogo de canecas","Jogo de pratos de porcelanato",
-  "Utensílios de silicone","Boleira de vidro","Garrafa térmica","Escorredor de louça de parede",
-  "Escorredores de inox","Talheres","Potes herméticos J1","Potes herméticos J2",
-  "Jogo de copos de vidro","Jogo de tabuleiros","Jogo de pirex","Ralador","Tábua de inox",
-  "Lixeiras","Suporte para papel higiênico","Kits suporte de toalha","Espelho","Toalhas de banho",
-  "Toalhas de rosto","Kit porta algodão, escova e cotonete + saboneteira","Cortina","Tapete",
-  "Capa de almofada","Edredom","2 jogos de lençol","Travesseiros","Cabeceira",
-  "Capa de colchão impermeável","Cesto de roupa","Mope","Ferro de passar roupa","Tábua de passar roupa",
-  "Varal de teto","Varal de chão","Chaleira","Jarra de suco","Panela de pressão","Suporte higiene","Sexto de roupa"
+  {nome:"Micro-ondas", limite:6},{nome:"Fogão", limite:10},{nome:"Armário de cozinha", limite:5},
+  {nome:"Geladeira", limite:15},{nome:"Painel para TV", limite:2},{nome:"Sofá", limite:10},
+  {nome:"Televisão", limite:15},{nome:"Ar-condicionado", limite:10},{nome:"Armário", limite:10},
+  {nome:"Colchão de casa D20", limite:3},{nome:"Sapateira", limite:3},{nome:"Máquina de lavar", limite:10},
+  {nome:"Aspirador de pó", limite:3}
 ];
 
-// Itens normais (quantidade máxima = 1)
-const itensNormais = [
-  "Micro-ondas","Fogão","Armário de cozinha","Geladeira",
-  "Painel para TV","Sofá","Televisão","Ar-condicionado",
-  "Armário","Colchão de casa D20","Sapateira","Máquina de lavar",
-  "Aspirador de pó","Liquidificador","Mixer","Ferro de passar roupa"
-];
-
-const catalogo=document.getElementById("catalogo");
-let escolhidos=JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
+const catalogo = document.getElementById("catalogo");
+let escolhidos = JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
 
 function criarCards(){
   let id=1;
+
+  // Seção Itens Normais
+  const tituloItens = document.createElement('div');
+  tituloItens.className='titulo-secao';
+  tituloItens.textContent='🎁 Itens Normais';
+  catalogo.appendChild(tituloItens);
+  itensNormais.forEach(nome=>{
+    const card = criarCard(nome,id,1); // quantidade máxima 1
+    catalogo.appendChild(card);
+    id++;
+  });
 
   // Seção Vales
   const tituloVales=document.createElement('div');
   tituloVales.className='titulo-secao';
   tituloVales.textContent='🎟️ Vales';
   catalogo.appendChild(tituloVales);
-  vales.forEach(nome=>{
-    const card=criarCard(nome,id,0);
-    catalogo.appendChild(card);
-    id++;
-  });
-
-  // Seção Itens Normais
-  const tituloItens=document.createElement('div');
-  tituloItens.className='titulo-secao';
-  tituloItens.textContent='🎁 Itens Normais';
-  catalogo.appendChild(tituloItens);
-  itensNormais.forEach(nome=>{
-    const card=criarCard(nome,id,1);
+  vales.forEach(v=>{
+    const card = criarCard(v.nome,id,v.limite);
     catalogo.appendChild(card);
     id++;
   });
@@ -228,17 +197,18 @@ function criarCards(){
 function criarCard(nome,id,limite){
   const div=document.createElement("div");
   div.className="card";
-  div.dataset.id=id;
+  div.dataset.id=String(id);
   div.dataset.nome=nome;
   div.dataset.limite=String(limite);
   const imgSrc=imagensProdutos[nome]||`https://via.placeholder.com/300x180?text=${encodeURIComponent(nome)}`;
-  const preco=precosProdutos[nome]||100;
+  const preco=precos[nome]||100;
   div.innerHTML=`
     <img src="${imgSrc}" alt="${nome}">
     <div class="card-content">
       <h3>${nome}</h3>
-      <p>${limite>0?'Quantidade: 1':'Produto sem limite'}</p>
-      <input type="number" id="quantidade-${id}" value="1" min="1" ${limite>0?'max="1"':''}>
+      <p>${limite>1?'Quantidade disponível: '+limite:'Quantidade: 1'}</p>
+      <input type="number" id="quantidade-${id}" value="1" min="1" ${limite>1?'max="'+limite+'" readonly':'max="1" readonly'}>
+      <p>Valor unitário: R$ ${preco.toFixed(2).replace('.',',')}</p>
       <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
         <button onclick="abrirConfirm(this)">Escolher</button>
       </div>
@@ -268,8 +238,8 @@ function abrirConfirm(btn){
   if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
   if(limite>0 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
 
-  const preco=precosProdutos[nome]||100;
-  currentSelection={id:String(id),nome,limite,quantidade,preco,comprador};
+  currentSelection={id:String(id),nome,limite,quantidade,comprador};
+  const preco=precos[nome]||100;
   document.getElementById('conf-nome').textContent=`Produto: ${nome}`;
   document.getElementById('conf-qtd').textContent=`Quantidade: ${quantidade}`;
   document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${preco.toFixed(2).replace('.',',')}`;
@@ -284,7 +254,7 @@ function copiarPix(){ navigator.clipboard.writeText(PIX_KEY).then(()=>{ document
 
 async function confirmarCompra(){
   if(!currentSelection) return;
-  const {id,nome,limite,quantidade,preco,comprador}=currentSelection;
+  const {id,nome,limite,quantidade,comprador}=currentSelection;
   document.getElementById('conf-msg').textContent='Registrando...';
   try{
     const params=new URLSearchParams({ nome, quantidade:String(quantidade), limite:String(limite), comprador });
