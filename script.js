@@ -1,5 +1,5 @@
 const PIX_KEY = "21 971963818";
-const SCRIPT_URL = "COLE_AQUI_SEU_URL_DO_APPS_SCRIPT";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
 
 // Valores personalizados
 const valoresProdutos = {
@@ -19,7 +19,7 @@ const valoresProdutos = {
   "Varal de chão":90, "Panela de pressão":150, "Jogo de panelas":100
 };
 
-// Caminho das imagens
+// Imagens para cada produto
 const imagensProdutos = {
   "Micro-ondas": "imagens/MICROONDAS.jpg", "Fogão": "imagens/FOGAO.jpg", "Armário de cozinha": "imagens/ARMARIODECOZINHA.jpg",
   "Geladeira": "imagens/GELADEIRA.jpg", "Painel para TV": "imagens/PAINELPARATV.jpg", "Sofá": "imagens/SOFÁ.jpg",
@@ -33,103 +33,123 @@ const imagensProdutos = {
   "Jogo de tabuleiros": "imagens/JOGODETABULEIROS.jpg", "Jogo de pirex": "imagens/JOGODEPIREX.jpg", "Ralador": "imagens/RALADOR.jpg",
   "Tábua de inox": "imagens/TABUADEINOX.jpg", "Lixeiras": "imagens/LIXEIRA.jpeg", "Suporte para papel higiênico": "imagens/SUPORTEHIGIENICO.jpeg",
   "Kits suporte de toalha": "imagens/KITSUPORTEDETOALHA.jpg", "Espelho": "imagens/ESPELHO.jpg", "Toalhas de banho": "imagens/TOALHASDEBANHO.jpg",
-  "Toalhas de rosto": "imagens/TOALHASDEROSTO.jpg", "Kit porta algodão, escova e cotonete + saboneteira": "imagens/KITPORTAALGODAO.jpg",
+  "Toalhas de rosto": "imagens/TOALHASDEROSTO.jpg", "Kit porta algodão, escova e cotonete + saboneteira": "imagens/KITALGODAO.jpg",
   "Cortina": "imagens/CORTINA.jpg", "Tapete": "imagens/TAPETE.jpg", "Capa de almofada": "imagens/CAPADEALMOFADA.jpg", "Edredom": "imagens/EDREDOM.jpg",
   "2 jogos de lençol": "imagens/JOGODELENÇOL.jpg", "Travesseiros": "imagens/TRAVESSEIRO.jpeg", "Cabeceira": "imagens/CABECEIRA.jpg",
-  "Capa de colchão impermeável": "imagens/CAPADECOLCHAO.jpg", "Sexto de roupa": "imagens/SEXTODEROUPA.jpg", "Mope": "imagens/MOPE.jpg",
+  "Capa de colchão impermeável": "imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg", "Sexto de roupa": "imagens/SEXTODEROUPA.jpg", "Mope": "imagens/MOPE.jpg",
   "Ferro de passar roupa": "imagens/FERRODEPASSAR.jpg", "Tábua de passar roupa": "imagens/TABUADEPASSAR.jpg", "Varal de teto": "imagens/VARALTETO.jpg",
-  "Varal de chão": "imagens/VARALCHAO.jpg", "Panela de pressão": "imagens/PANELADEPRESSAO.jpg", "Jogo de panelas": "imagens/JOGODEPANELA.jpg"
+  "Varal de chão": "imagens/VARALCHAO.jpg", "Panela de pressão": "imagens/PANELADEPRESSÃO.jpg", "Jogo de panelas": "imagens/JOGODEPANELA.jpg"
 };
 
-const catalogo = document.getElementById("catalogo");
-let escolhidos = JSON.parse(localStorage.getItem("itensEscolhidos")) || [];
+const produtosComLimite = [
+  {nome:"Micro-ondas", limite:6}, {nome:"Fogão", limite:10}, {nome:"Armário de cozinha", limite:5},
+  {nome:"Geladeira", limite:15}, {nome:"Painel para TV", limite:2}, {nome:"Sofá", limite:10},
+  {nome:"Televisão", limite:15}, {nome:"Ar-condicionado", limite:10}, {nome:"Armário", limite:10},
+  {nome:"Colchão de casa D20", limite:3}, {nome:"Sapateira", limite:3}, {nome:"Máquina de lavar", limite:10},
+  {nome:"Aspirador de pó", limite:3}, {nome:"Jogo de panelas", limite:6}
+];
+
+const produtosNormais = Object.keys(valoresProdutos).filter(p => !produtosComLimite.find(pc => pc.nome===p));
+
+const catalogo=document.getElementById("catalogo");
+let escolhidos=JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
 
 function criarCards(){
   let id=1;
-  Object.keys(valoresProdutos).forEach(nome=>{
-    const card = criarCard(nome, id, 1);
+  produtosComLimite.forEach(prod=>{
+    const card=criarCard(prod.nome,id,prod.limite);
+    catalogo.appendChild(card);
+    id++;
+  });
+  produtosNormais.forEach(prod=>{
+    const card=criarCard(prod,id,1);
     catalogo.appendChild(card);
     id++;
   });
 }
 
 function criarCard(nome,id,limite){
-  const div = document.createElement("div");
-  div.className = "card";
-  div.dataset.id = id;
-  div.dataset.nome = nome;
-  div.dataset.limite = limite;
+  const div=document.createElement("div");
+  div.className="card";
+  div.dataset.id=id;
+  div.dataset.nome=nome;
+  div.dataset.limite=String(limite);
 
   const imgSrc = imagensProdutos[nome] || `https://via.placeholder.com/300x180?text=${encodeURIComponent(nome)}`;
-  const inputHTML = limite>1 ? `<input type="number" id="quantidade-${id}" value="1" min="1" max="${limite}">` : '';
-  
-  div.innerHTML = `
+  let inputHTML = limite>1 ? `<input type="number" id="quantidade-${id}" value="1" min="1" max="${limite}">` : '';
+  const tipoTexto = limite===1 ? 'Item' : `Limite de vales: ${limite}`;
+
+  div.innerHTML=`
     <img src="${imgSrc}" alt="${nome}">
     <div class="card-content">
       <h3>${nome}</h3>
-      <p>Valor unitário: R$ ${valoresProdutos[nome].toFixed(2).replace('.',',')}</p>
+      <p>${tipoTexto}</p>
       ${inputHTML}
       <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
         <button onclick="abrirConfirm(this)">Escolher</button>
       </div>
     </div>
   `;
+
   if(escolhidos.includes(String(id))){
-    const btn = div.querySelector("button");
-    btn.textContent = "Escolhido";
-    btn.disabled = true;
-    div.style.opacity = 0.6;
+    const btn=div.querySelector("button");
+    btn.textContent="Escolhido"; 
+    btn.disabled=true; 
+    div.style.opacity=0.6;
   }
   return div;
 }
 
-const confirmModal = document.getElementById('confirmModal');
-const pixModal = document.getElementById('pixModal');
-let currentSelection = null;
+const confirmModal=document.getElementById('confirmModal');
+const pixModal=document.getElementById('pixModal');
+let currentSelection=null;
 
 function abrirConfirm(btn){
-  const card = btn.closest('.card');
-  const id = card.dataset.id;
-  const nome = card.dataset.nome;
-  const quantidade = card.querySelector('input') ? parseInt(card.querySelector('input').value) : 1;
-  const comprador = document.getElementById("nomeComprador").value.trim();
+  const card=btn.closest('.card');
+  const id=card.dataset.id;
+  const nome=card.dataset.nome;
+  const limite=parseInt(card.dataset.limite);
+  let quantidade = limite>1 ? parseInt(document.getElementById(`quantidade-${id}`).value)||1 : 1;
+  const comprador=document.getElementById("nomeComprador").value.trim();
   if(!comprador){ alert("Informe seu nome antes de escolher."); return; }
+  if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
+  if(limite>1 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
 
-  currentSelection = {id, nome, quantidade, comprador};
-  document.getElementById('conf-nome').textContent = `Produto: ${nome}`;
-  document.getElementById('conf-qtd').textContent = `Quantidade: ${quantidade}`;
-  document.getElementById('conf-unit').textContent = `Valor unitário: R$ ${valoresProdutos[nome].toFixed(2).replace('.',',')}`;
-  document.getElementById('conf-total').textContent = `Total: R$ ${(valoresProdutos[nome]*quantidade).toFixed(2).replace('.',',')}`;
-  document.getElementById('conf-comprador').textContent = `Comprador: ${comprador}`;
-  document.getElementById('pix-key').textContent = PIX_KEY;
-  document.getElementById('conf-msg').textContent = '';
+  currentSelection={id:String(id),nome,limite,quantidade,comprador};
+  document.getElementById('conf-nome').textContent=`Produto: ${nome}`;
+  document.getElementById('conf-qtd').textContent=`Quantidade: ${quantidade}`;
+  document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${valoresProdutos[nome].toFixed(2).replace('.',',')}`;
+  document.getElementById('conf-total').textContent=`Total: R$ ${(valoresProdutos[nome]*quantidade).toFixed(2).replace('.',',')}`;
+  document.getElementById('conf-comprador').textContent=`Comprador: ${comprador}`;
+  document.getElementById('pix-key').textContent=PIX_KEY;
+  document.getElementById('conf-msg').textContent='';
   confirmModal.classList.add('active');
 }
 
-function fecharConfirm(){ confirmModal.classList.remove('active'); currentSelection = null; }
-function abrirPixModal(){ pixModal.classList.add('active'); }
-function fecharPix(){ pixModal.classList.remove('active'); }
-function copiarPix(){ navigator.clipboard.writeText(PIX_KEY); }
+function fecharConfirm(){ confirmModal.classList.remove('active'); currentSelection=null; }
+function copiarPix(){
+  navigator.clipboard.writeText(PIX_KEY).then(()=>{document.getElementById('conf-msg').textContent='Chave PIX copiada.'}).catch(()=>{document.getElementById('conf-msg').textContent='Não foi possível copiar.'});
+}
 
 async function confirmarCompra(){
   if(!currentSelection) return;
-  const {id,nome,quantidade,comprador} = currentSelection;
+  const {id,nome,quantidade,limite,comprador}=currentSelection;
   document.getElementById('conf-msg').textContent='Registrando...';
-  try {
-    const res = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body: new URLSearchParams({ nome, quantidade:String(quantidade), comprador })
+  try{
+    const res=await fetch(SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({ nome, quantidade:String(quantidade), comprador, limite:String(limite) })
     });
-    const data = await res.json();
+    const data=await res.json();
     if(data.status==='ok'){
       escolhidos.push(id);
-      localStorage.setItem('itensEscolhidos', JSON.stringify(escolhidos));
+      localStorage.setItem('itensEscolhidos',JSON.stringify(escolhidos));
       marcarComoEscolhido(id);
       fecharConfirm();
       abrirPixModal();
-    } else {
-      document.getElementById('conf-msg').textContent = data.mensagem || 'Erro ao registrar.';
+    } else{
+      document.getElementById('conf-msg').textContent=data.mensagem||'Erro ao registrar.';
     }
   } catch(err){
     console.error(err);
@@ -138,10 +158,13 @@ async function confirmarCompra(){
 }
 
 function marcarComoEscolhido(id){
-  const card = document.querySelector(`.card[data-id="${id}"]`);
+  const card=document.querySelector(`.card[data-id="${id}"]`);
   if(!card) return;
-  const btn = card.querySelector('button');
+  const btn=card.querySelector('button');
   btn.textContent='Escolhido'; btn.disabled=true; card.style.opacity=0.6;
 }
+function abrirPixModal(){ pixModal.classList.add('active'); }
+function fecharPix(){ pixModal.classList.remove('active'); }
 
 criarCards();
+document.querySelectorAll('.card').forEach(card=>{ const id=String(card.dataset.id); if(escolhidos.includes(id)) marcarComoEscolhido(id); });
