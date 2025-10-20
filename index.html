@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Lista de Presentes - Casamento</title>
- <style>
+  <style>
 html,body{font-family:'Montserrat',sans-serif;margin:0;padding:0;background-color:#fefcf8;color:#333}
 header{background-color:#4a7c59;color:#fff;text-align:center;padding:2rem;font-size:2rem;font-weight:700;border-bottom:3px solid #c9a66b;letter-spacing:1px}
 main{max-width:1200px;margin:2rem auto;padding:0 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem}
@@ -33,7 +33,7 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 
 #compradorWrapper{max-width:480px;margin:1.5rem auto;text-align:center}
 #nomeComprador{padding:.6rem;width:85%;border-radius:8px;border:1px solid #ccc;font-size:1rem;font-weight:500;box-shadow:0 3px 8px rgba(0,0,0,.1)}
-</style>
+  </style>
 </head>
 <body>
 <header>🎀 Lista de Presentes - Chá De Casa Nova</header>
@@ -82,62 +82,26 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 </div>
 
 <script>
+// Configurações principais
 const PIX_KEY = "21 971963818";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
 
-// Valores personalizados
-const valoresProdutos = {
-  "Micro-ondas": 100, "Fogão": 100, "Armário de cozinha": 100, "Geladeira": 100, 
-  "Painel para TV": 100, "Sofá": 100, "Televisão": 100, "Ar-condicionado": 100, 
-  "Armário": 100, "Colchão de casa D20": 100, "Sapateira": 100, "Máquina de lavar": 100, 
-  "Aspirador de pó": 100, "Sanduicheira": 100, "Liquidificador": 170, "Mixer": 170,
-  "Jogo de canecas": 75, "Jogo de pratos de porcelanato": 100, "Utensílios de silicone":50,
-  "Boleira de vidro":50, "Garrafa térmica":55, "Escorredor de louça de parede":60,
-  "Escorredores de inox":70, "Talheres":60, "Potes herméticos J1":90, "Potes herméticos J2":105,
-  "Jogo de copos de vidro":65, "Jogo de tabuleiros":85, "Jogo de pirex":100, "Ralador":50,
-  "Tábua de inox":50, "Lixeiras":55, "Suporte para papel higiênico":55, "Kits suporte de toalha":75,
-  "Espelho":80, "Toalhas de banho":100, "Toalhas de rosto":50, "Kit porta algodão, escova e cotonete + saboneteira":70,
-  "Cortina":100, "Tapete":70, "Capa de almofada":90, "Edredom":120, "2 jogos de lençol":70,
-  "Travesseiros":75, "Cabeceira":60, "Capa de colchão impermeável":50, "Sexto de roupa":50,
-  "Mope":50, "Ferro de passar roupa":110, "Tábua de passar roupa":100, "Varal de teto":65,
-  "Varal de chão":90, "Panela de pressão":150, "Jogo de panelas":100
-};
+// Valores personalizados por produto
+const valoresProdutos = { /*... mesmo objeto do seu código ...*/ };
 
-// Aqui você coloca os caminhos das imagens
-const imagensProdutos = {
-  "Micro-ondas": "imagens/MICROONDAS.jpg", "Fogão": "imagens/FOGAO.jpg", "Armário de cozinha": "imagens/ARMARIODECOZINHA.jpg",
-  "Geladeira": "imagens/GELADEIRA.jpg", "Painel para TV": "imagens/PAINELPARATV.jpg", "Sofá": "imagens/SOFÁ.jpg",
-  "Televisão": "imagens/TELEVISÃO.jpg", "Ar-condicionado": "imagens/ARCONDICIONADO.jpg", "Armário": "imagens/ARMARIO.jpg",
-  "Colchão de casa D20": "imagens/COLCHAO.jpg", "Sapateira": "imagens/SAPATEIRA.jpg", "Máquina de lavar": "imagens/MAQUINADELAVAR.jpeg",
-  "Aspirador de pó": "imagens/ASPIRADORDEPO.jpg", "Sanduicheira": "imagens/SANDUUICHEIRA.jpg", "Liquidificador": "imagens/LIQUIDIFICADOR.jpg",
-  "Mixer": "imagens/MIXER.jpg", "Jogo de canecas": "imagens/JOGODECANECAS.jpg", "Jogo de pratos de porcelanato": "imagens/JOGODEPRATOSPORCELANADO.jpg",
-  "Utensílios de silicone": "imagens/UTENCILIOSDESILICONE.jpg", "Boleira de vidro": "imagens/BOLEIRADEVIDRO.jpg", "Garrafa térmica": "imagens/GARRAFATERMICA.jpg",
-  "Escorredor de louça de parede": "imagens/ESCORREDORDELOUÇADEPARADE.jpg", "Escorredores de inox": "imagens/ESCORREDORDEINOX.jpeg", "Talheres": "imagens/TALHERES.jpg",
-  "Potes herméticos J1": "imagens/POTESHERMETICOSJ1.jpg", "Potes herméticos J2": "imagens/POTESHERMETICOSJ2.jpg", "Jogo de copos de vidro": "imagens/JOGODECOPOSDEVIDRO.jpg",
-  "Jogo de tabuleiros": "imagens/JOGODETABULEIROS.jpg", "Jogo de pirex": "imagens/JOGODEPIREX.jpg", "Ralador": "imagens/RALADOR.jpg",
-  "Tábua de inox": "imagens/TABUADEINOX.jpg", "Lixeiras": "imagens/LIXEIRA.jpeg", "Suporte para papel higiênico": "imagens/SUPORTEHIGIENICO.jpeg",
-  "Kits suporte de toalha": "imagens/KITSUPORTEDETOALHA.jpg", "Espelho": "imagens/ESPELHO.jpg", "Toalhas de banho": "imagens/TOALHASDEBANHO.jpg",
-  "Toalhas de rosto": "imagens/TOALHASDEROSTO.jpg", "Kit porta algodão, escova e cotonete + saboneteira": "imagens/Kit porta algodão, escova e cotonete + saboneteira.jpg",
-  "Cortina": "imagens/CORTINA.jpg", "Tapete": "imagens/TAPETE.jpg", "Capa de almofada": "imagens/CAPADEALMOFADA.jpg", "Edredom": "imagens/EDREDOM.jpg",
-  "2 jogos de lençol": "imagens/JOGODELENÇOL.jpg", "Travesseiros": "imagens/TRAVESSEIRO.jpeg", "Cabeceira": "imagens/CABECEIRA.jpg",
-  "Capa de colchão impermeável": "imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg", "Sexto de roupa": "imagens/SEXTODEROUPA.jpg", "Mope": "imagens/MOPE.jpg",
-  "Ferro de passar roupa": "imagens/FERRODEPASSAR.jpg", "Tábua de passar roupa": "imagens/TABUADEPASSAR.jpg", "Varal de teto": "imagens/VARALTETO.jpg",
-  "Varal de chão": "imagens/VARALCHAO.jpg", "Panela de pressão": "imagens/PANELADEPRESSÃO.jpg", "Jogo de panelas": "imagens/JOGODEPANELA.jpg"
-};
+// Caminho das imagens
+const imagensProdutos = { /*... mesmo objeto do seu código ...*/ };
 
-const produtosComLimite = [
-  {nome:"Micro-ondas", limite:6}, {nome:"Fogão", limite:10}, {nome:"Armário de cozinha", limite:5},
-  {nome:"Geladeira", limite:15}, {nome:"Painel para TV", limite:2}, {nome:"Sofá", limite:10},
-  {nome:"Televisão", limite:15}, {nome:"Ar-condicionado", limite:10}, {nome:"Armário", limite:10},
-  {nome:"Colchão de casa D20", limite:3}, {nome:"Sapateira", limite:3}, {nome:"Máquina de lavar", limite:10},
-  {nome:"Aspirador de pó", limite:3}, {nome:"Jogo de panelas", limite:6}
-];
+// Produtos com limite de quantidade (vales)
+const produtosComLimite = [ /*... mesmo objeto do seu código ...*/ ];
 
+// Produtos normais
 const produtosNormais = Object.keys(valoresProdutos).filter(p => !produtosComLimite.find(pc => pc.nome===p));
 
 const catalogo=document.getElementById("catalogo");
 let escolhidos=JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
 
+// Criar cards no catálogo
 function criarCards(){
   let id=1;
   produtosComLimite.forEach(prod=>{
@@ -152,6 +116,7 @@ function criarCards(){
   });
 }
 
+// Criar card individual
 function criarCard(nome,id,limite){
   const div=document.createElement("div");
   div.className="card";
@@ -188,6 +153,7 @@ const confirmModal=document.getElementById('confirmModal');
 const pixModal=document.getElementById('pixModal');
 let currentSelection=null;
 
+// Abrir modal de confirmação
 function abrirConfirm(btn){
   const card=btn.closest('.card');
   const id=card.dataset.id;
@@ -244,6 +210,7 @@ function marcarComoEscolhido(id){
   const btn=card.querySelector('button');
   btn.textContent='Escolhido'; btn.disabled=true; card.style.opacity=0.6;
 }
+
 function abrirPixModal(){ pixModal.classList.add('active'); }
 function fecharPix(){ pixModal.classList.remove('active'); }
 
