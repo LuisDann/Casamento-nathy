@@ -23,7 +23,6 @@ const produtos = [
   {nome:"Capa de colchão impermeável", valor:50, img:"imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg", limite:10},
   {nome:"2 jogos de lençol", valor:70, img:"imagens/JOGODELENÇOL.jpg", limite:10},
   {nome:"Kit porta algodão, escova e cotonete + saboneteira", valor:70, img:"imagens/Kit porta algodão, escova e cotonete + saboneteira.jpg", limite:10},
-  // Adicione os demais itens aqui...
 ];
 
 let escolhidos = JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
