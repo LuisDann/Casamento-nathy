@@ -171,8 +171,8 @@ const pixModal=document.getElementById('pixModal');
 
 function abrirConfirm(btn){
   const card=btn.closest('.card');
-  const id=card.dataset.id;
-  const nome=card.dataset.nome;
+  const id=parseInt(card.dataset.id);
+  const prod = produtos[id];
   const limite=parseInt(card.dataset.limite);
   let quantidade = limite>1 ? parseInt(document.getElementById(`quantidade-${id}`).value)||1 : 1;
   const comprador=document.getElementById("nomeComprador").value.trim();
@@ -180,11 +180,11 @@ function abrirConfirm(btn){
   if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
   if(limite>1 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
 
-  currentSelection={id,nome,limite,quantidade,comprador};
-  document.getElementById('conf-nome').textContent=`Produto: ${nome}`;
+  currentSelection={id,prod,limite,quantidade,comprador};
+  document.getElementById('conf-nome').textContent=`Produto: ${prod.nome}`;
   document.getElementById('conf-qtd').textContent=`Quantidade: ${quantidade}`;
-  document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${produtos[id].valor.toFixed(2).replace('.',',')}`;
-  document.getElementById('conf-total').textContent=`Total: R$ ${(produtos[id].valor*quantidade).toFixed(2).replace('.',',')}`;
+  document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${prod.valor.toFixed(2).replace('.',',')}`;
+  document.getElementById('conf-total').textContent=`Total: R$ ${(prod.valor*quantidade).toFixed(2).replace('.',',')}`;
   document.getElementById('conf-comprador').textContent=`Comprador: ${comprador}`;
   document.getElementById('pix-key').textContent=PIX_KEY;
   document.getElementById('conf-msg').textContent='';
@@ -196,10 +196,10 @@ function copiarPix(){ navigator.clipboard.writeText(PIX_KEY).then(()=>{document.
 
 async function confirmarCompra(){
   if(!currentSelection) return;
-  const {id,nome,limite,quantidade,comprador}=currentSelection;
+  const {id,prod,limite,quantidade,comprador}=currentSelection;
   document.getElementById('conf-msg').textContent='Registrando...';
   try{
-    const params=new URLSearchParams({nome, quantidade:String(quantidade), limite:String(limite), comprador});
+    const params=new URLSearchParams({nome:prod.nome, quantidade:String(quantidade), limite:String(limite), comprador});
     const res=await fetch(`${SCRIPT_URL}?${params.toString()}`);
     const data=await res.json();
     if(data.status==='ok'){
