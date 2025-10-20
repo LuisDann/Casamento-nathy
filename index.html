@@ -76,9 +76,50 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 
 <script>
 const PIX_KEY = "21 971963818";
-const UNIT_PRICE = 100;
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx68kIYLxZsN0eDyZfkCSLnRwEHjhArsEjKXdUyFrIJ2IAOIspf94n2jkqST2FOhZk19g/exec";
 
+// Preços dos produtos
+const precosProdutos = {
+  "Sanduicheira": 100,
+  "Liquidificador": 100,
+  "Mixer": 170,
+  "Jogo de canecas": 75,
+  "Jogo de pratos de porcelanato": 100,
+  "Utensílios de silicone": 50,
+  "Boleira de vidro": 50,
+  "Garrafa térmica": 55,
+  "Escorredor de louça de parede": 60,
+  "Escorredores de inox": 70,
+  "Talheres": 60,
+  "Potes herméticos J1": 90,
+  "Potes herméticos J2": 105,
+  "Jogo de copos de vidro": 65,
+  "Jogo de tabuleiros": 85,
+  "Jogo de pirex": 100,
+  "Ralador": 50,
+  "Tábua de inox": 50,
+  "Lixeiras": 55,
+  "Suporte para papel higiênico": 55,
+  "Kits suporte de toalha": 75,
+  "Espelho": 80,
+  "Toalhas de banho": 100,
+  "Toalhas de rosto": 50,
+  "Kit porta algodão, escova e cotonete + saboneteira": 70,
+  "Tapete": 70,
+  "Capa de almofada": 90,
+  "Edredom": 120,
+  "2 jogos de lençol": 70,
+  "Travesseiros": 75,
+  "Cabeceira": 60,
+  "Capa de colchão impermeável": 50,
+  "Seixo de roupa": 50,
+  "Mope": 50,
+  "Ferro de passar roupa": 110,
+  "Varal de teto": 65,
+  "Varal de chão": 90
+};
+
+// Imagens dos produtos
 const imagensProdutos = {
   "Ar-condicionado": "imagens/ARCONDICIONADO.jpg",
   "Armário": "imagens/ARMARIO.jpg",
@@ -140,9 +181,9 @@ const imagensProdutos = {
   "Varal de teto": "imagens/VARALTETO.jpg"
 };
 
-// Produtos sem limite (Vales)
+// Vales sem limite
 const vales = [
-  "Sanduicheira","Liquidificador","Mixer","Jogo de canecas","Jogo de pratos de porcelanato",
+  "Sanduicheira","Liquidificador","Jogo de canecas","Jogo de pratos de porcelanato",
   "Utensílios de silicone","Boleira de vidro","Garrafa térmica","Escorredor de louça de parede",
   "Escorredores de inox","Talheres","Potes herméticos J1","Potes herméticos J2",
   "Jogo de copos de vidro","Jogo de tabuleiros","Jogo de pirex","Ralador","Tábua de inox",
@@ -182,7 +223,8 @@ function criarCards() {
   tituloVales.textContent = '🎟️ Vales';
   catalogo.appendChild(tituloVales);
   vales.forEach(nome=>{
-    const card = criarCard(nome, id, 0); // Sem limite
+    const preco = precosProdutos[nome] || 100;
+    const card = criarCard(nome, id, 0, preco);
     catalogo.appendChild(card);
     id++;
   });
@@ -193,18 +235,20 @@ function criarCards() {
   tituloItens.textContent = '🎁 Itens Normais';
   catalogo.appendChild(tituloItens);
   itensNormais.forEach(prod=>{
-    const card = criarCard(prod.nome, id, prod.limite);
+    const preco = precosProdutos[prod.nome] || 100;
+    const card = criarCard(prod.nome, id, prod.limite, preco);
     catalogo.appendChild(card);
     id++;
   });
 }
 
-function criarCard(nome, id, limite) {
+function criarCard(nome, id, limite, preco) {
   const div = document.createElement("div");
   div.className = "card";
   div.dataset.id = id;
   div.dataset.nome = nome;
   div.dataset.limite = String(limite);
+  div.dataset.preco = String(preco);
   const imgSrc = imagensProdutos[nome] || `https://via.placeholder.com/300x180?text=${encodeURIComponent(nome)}`;
   div.innerHTML = `
     <img src="${imgSrc}" alt="${nome}">
@@ -215,6 +259,7 @@ function criarCard(nome, id, limite) {
       <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
         <button onclick="abrirConfirm(this)">Escolher</button>
       </div>
+      <p style="text-align:center;font-weight:700">R$ ${preco.toFixed(2).replace('.',',')}</p>
     </div>
   `;
   if(escolhidos.includes(String(id))){
@@ -240,12 +285,13 @@ function abrirConfirm(btn){
   if(!comprador){ alert("Informe seu nome antes de escolher."); return; }
   if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
   if(limite>0 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
+  const preco = parseFloat(card.dataset.preco);
 
-  currentSelection={id:String(id),nome,limite,quantidade,comprador};
+  currentSelection={id:String(id),nome,limite,quantidade,preco,comprador};
   document.getElementById('conf-nome').textContent=`Produto: ${nome}`;
   document.getElementById('conf-qtd').textContent=`Quantidade: ${quantidade}`;
-  document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${UNIT_PRICE.toFixed(2).replace('.',',')}`;
-  document.getElementById('conf-total').textContent=`Total: R$ ${(UNIT_PRICE*quantidade).toFixed(2).replace('.',',')}`;
+  document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${preco.toFixed(2).replace('.',',')}`;
+  document.getElementById('conf-total').textContent=`Total: R$ ${(preco*quantidade).toFixed(2).replace('.',',')}`;
   document.getElementById('pix-key').textContent=PIX_KEY;
   document.getElementById('conf-msg').textContent='';
   confirmModal.classList.add('active');
@@ -255,7 +301,7 @@ function fecharConfirm(){ confirmModal.classList.remove('active'); currentSelect
 function copiarPix(){ navigator.clipboard.writeText(PIX_KEY).then(()=>{ document.getElementById('conf-msg').textContent='Chave PIX copiada.'; }).catch(()=>{ document.getElementById('conf-msg').textContent='Não foi possível copiar.'; }); }
 async function confirmarCompra(){
   if(!currentSelection) return;
-  const {id,nome,limite,quantidade,comprador}=currentSelection;
+  const {id,nome,limite,quantidade,preco,comprador}=currentSelection;
   document.getElementById('conf-msg').textContent='Registrando...';
   try{
     const params=new URLSearchParams({ nome, quantidade:String(quantidade), limite:String(limite), comprador });
