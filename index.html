@@ -162,30 +162,32 @@ const vales = [
 ];
 
 const catalogo = document.getElementById("catalogo");
-let escolhidos = JSON.parse(localStorage.getItem("itensEscolhidos"))||[];
 
-function criarCards(){
+async function criarCards(){
   let id=1;
 
   const tituloItens = document.createElement('div');
   tituloItens.className='titulo-secao';
   tituloItens.textContent='🎁 Itens Normais';
   catalogo.appendChild(tituloItens);
-  itensNormais.forEach(nome=>{
+  for(const nome of itensNormais){
     const card = criarCard(nome,id,1);
     catalogo.appendChild(card);
     id++;
-  });
+  }
 
   const tituloVales=document.createElement('div');
   tituloVales.className='titulo-secao';
   tituloVales.textContent='🎟️ Vales';
   catalogo.appendChild(tituloVales);
-  vales.forEach(v=>{
+  for(const v of vales){
     const card = criarCard(v.nome,id,v.limite);
     catalogo.appendChild(card);
     id++;
-  });
+  }
+
+  // Atualiza cards conforme planilha
+  await atualizarCards();
 }
 
 function criarCard(nome,id,limite){
@@ -208,20 +210,37 @@ function criarCard(nome,id,limite){
       </div>
     </div>
   `;
-  if(escolhidos.includes(String(id))){
-    const btn=div.querySelector("button");
-    btn.textContent="Escolhido";
-    btn.disabled=true;
-    div.style.opacity=0.6;
-  }
   return div;
+}
+
+// Atualiza a interface conforme os itens já comprados na planilha
+async function atualizarCards(){
+  try{
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
+    if(data.dados){
+      data.dados.forEach(item=>{
+        const cards = document.querySelectorAll(`.card[data-nome="${item.nome}"]`);
+        cards.forEach(card=>{
+          const btn=card.querySelector('button');
+          const limite=parseInt(card.dataset.limite);
+          const totalComprado=parseInt(item.quantidade);
+          if(limite>0 && totalComprado>=limite){
+            btn.textContent='Escolhido';
+            btn.disabled=true;
+            card.style.opacity=0.6;
+          }
+        });
+      });
+    }
+  }catch(err){ console.error('Erro ao atualizar cards',err); }
 }
 
 const confirmModal=document.getElementById('confirmModal');
 const pixModal=document.getElementById('pixModal');
 let currentSelection=null;
 
-function abrirConfirm(btn){
+async function abrirConfirm(btn){
   const card=btn.closest('.card');
   const id=card.dataset.id;
   const nome=card.dataset.nome;
@@ -230,7 +249,23 @@ function abrirConfirm(btn){
   const comprador=document.getElementById("nomeComprador").value.trim();
   if(!comprador){ alert("Informe seu nome antes de escolher."); return; }
   if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
-  if(limite>0 && quantidade>limite){ alert("Quantidade maior que o limite"); return; }
+
+  // Consulta planilha para validar quantidade disponível
+  let totalComprado=0;
+  try{
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
+    if(data.dados){
+      totalComprado = data.dados
+        .filter(item => item.nome === nome)
+        .reduce((acc,item)=>acc+Number(item.quantidade),0);
+    }
+  }catch(err){ console.error(err); }
+
+  if(limite>0 && (totalComprado+quantidade)>limite){
+    alert("Quantidade maior que o limite disponível");
+    return;
+  }
 
   currentSelection={id:String(id),nome,limite,quantidade,comprador};
   const preco=precos[nome]||100;
@@ -258,11 +293,11 @@ async function confirmarCompra(){
     });
     const data = await res.json();
     if(data.status==='ok'){
-      escolhidos.push(String(id));
-      localStorage.setItem('itensEscolhidos',JSON.stringify(escolhidos));
       marcarComoEscolhido(id);
       fecharConfirm();
       abrirPixModal();
+      // Atualiza todos os cards após a compra
+      await atualizarCards();
     } else {
       document.getElementById('conf-msg').textContent=data.mensagem||'Erro ao registrar.';
     }
