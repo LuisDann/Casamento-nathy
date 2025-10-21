@@ -188,6 +188,9 @@ async function criarCards(){
 
   // Atualiza cards conforme planilha
   await atualizarCards();
+
+  // Atualização automática a cada 10 segundos
+  setInterval(atualizarCards,10000);
 }
 
 function criarCard(nome,id,limite){
@@ -229,6 +232,10 @@ async function atualizarCards(){
             btn.textContent='Escolhido';
             btn.disabled=true;
             card.style.opacity=0.6;
+          } else {
+            btn.textContent='Escolher';
+            btn.disabled=false;
+            card.style.opacity=1;
           }
         });
       });
