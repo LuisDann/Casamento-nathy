@@ -76,11 +76,15 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 
 <script>
 const PIX_KEY = "21 971963818";
+// URLs do proxy serverless no Vercel
 const SCRIPT_URL = {
   GET: "https://proxy-casamento-1copceim3-luisdanns-projects.vercel.app/dados",
   POST: "https://proxy-casamento-1copceim3-luisdanns-projects.vercel.app/comprar"
 };
 
+
+
+// Preços e imagens
 const precos = {
   "Sanduicheira":100,"Liquidificador":100,"Mixer":170,"Jogo de canecas":75,
   "Jogo de pratos de porcelanato":100,"Utensílios de silicone":50,"Boleira de vidro":50,
@@ -154,6 +158,7 @@ const imagensProdutos = {
   "Varal de teto":"imagens/VARALTETO.jpg"
 };
 
+// Itens e vales
 const itensNormais = Object.keys(precos);
 const vales = [
   {nome:"Micro-ondas", limite:6},{nome:"Fogão", limite:10},{nome:"Armário de cozinha", limite:5},
@@ -224,35 +229,30 @@ async function atualizarCards(){
   try{
     const res = await fetch(SCRIPT_URL.GET);
     const data = await res.json();
-    const dadosArray = Array.isArray(data.dados) ? data.dados : (Array.isArray(data) ? data : []);
-
-    if(dadosArray.length === 0){
-      console.warn('Nenhum dado disponível');
-    }
-
-    dadosArray.forEach(item => {
-      const cards = document.querySelectorAll(`.card[data-nome="${item.nome}"]`);
-      cards.forEach(card => {
-        const btn = card.querySelector('button');
-        const limite = parseInt(card.dataset.limite);
-        const totalComprado = parseInt(item.quantidade) || 0;
-        const restante = limite - totalComprado;
-        const pDisponivel = card.querySelector(`#disponivel-${card.dataset.id}`);
-        if(pDisponivel) pDisponivel.textContent = restante>0 ? 'Quantidade disponível: '+restante : 'Esgotado';
-        if(limite>0 && totalComprado>=limite){
-          btn.textContent='Escolhido';
-          btn.disabled=true;
-          card.style.opacity=0.6;
-          const input = card.querySelector('input');
-          if(input) input.value=limite;
-        } else {
-          btn.textContent='Escolher';
-          btn.disabled=false;
-          card.style.opacity=1;
-        }
+    if(data.dados){
+      data.dados.forEach(item=>{
+        const cards = document.querySelectorAll(`.card[data-nome="${item.nome}"]`);
+        cards.forEach(card=>{
+          const btn=card.querySelector('button');
+          const limite=parseInt(card.dataset.limite);
+          const totalComprado=parseInt(item.quantidade);
+          const restante = limite - totalComprado;
+          const pDisponivel = card.querySelector(`#disponivel-${card.dataset.id}`);
+          if(pDisponivel) pDisponivel.textContent = restante>0?'Quantidade disponível: '+restante:'Esgotado';
+          if(limite>0 && totalComprado>=limite){
+            btn.textContent='Escolhido';
+            btn.disabled=true;
+            card.style.opacity=0.6;
+            const input = card.querySelector('input');
+            if(input) input.value=limite;
+          } else {
+            btn.textContent='Escolher';
+            btn.disabled=false;
+            card.style.opacity=1;
+          }
+        });
       });
-    });
-
+    }
   }catch(err){ console.error('Erro ao atualizar cards',err); }
 }
 
@@ -276,9 +276,8 @@ async function abrirConfirm(btn){
   try{
     const res = await fetch(SCRIPT_URL.GET);
     const data = await res.json();
-    const dadosArray = Array.isArray(data.dados) ? data.dados : (Array.isArray(data) ? data : []);
-    if(dadosArray.length){
-      totalComprado = dadosArray
+    if(data.dados){
+      totalComprado = data.dados
         .filter(item => item.nome === nome)
         .reduce((acc,item)=>acc+Number(item.quantidade),0);
     }
