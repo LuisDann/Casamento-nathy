@@ -300,9 +300,10 @@ function copiarPix(){ navigator.clipboard.writeText(PIX_KEY).then(()=>{ document
 async function confirmarCompra(){
   if(!currentSelection) return;
   const {id,nome,limite,quantidade}=currentSelection;
+  const comprador = document.getElementById("nomeComprador").value || "Desconhecido"; // PEGAR NOME DO COMPRADOR
   document.getElementById('conf-msg').textContent='Registrando...';
   try{
-    const params = new URLSearchParams({ nome, quantidade:String(quantidade), limite:String(limite) });
+    const params = new URLSearchParams({ nome, quantidade:String(quantidade), limite:String(limite), comprador });
     const res = await fetch(SCRIPT_URL.POST, {
       method: 'POST',
       body: params
