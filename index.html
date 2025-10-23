@@ -268,6 +268,9 @@ async function abrirConfirm(btn){
 
   if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
 
+  const comprador = document.getElementById("nomeComprador").value.trim();
+  if(!comprador){ alert("Por favor, digite seu nome antes de escolher o presente."); return; }
+
   let totalComprado=0;
   try{
     const res = await fetch(SCRIPT_URL.GET);
@@ -283,7 +286,7 @@ async function abrirConfirm(btn){
   if(restante<=0){ alert("Quantidade esgotada"); return; }
   if(quantidade>restante){ alert("Quantidade maior que o limite disponível"); quantidade = restante; }
 
-  currentSelection={id:String(id),nome,limite,quantidade};
+  currentSelection={id:String(id),nome,limite,quantidade,comprador};
   const preco=precos[nome]||100;
   document.getElementById('conf-nome').textContent=`Produto: ${nome}`;
   document.getElementById('conf-qtd').textContent=`Quantidade: ${quantidade}`;
@@ -299,8 +302,13 @@ function copiarPix(){ navigator.clipboard.writeText(PIX_KEY).then(()=>{ document
 
 async function confirmarCompra(){
   if(!currentSelection) return;
-  const {id,nome,limite,quantidade}=currentSelection;
-  const comprador = document.getElementById("nomeComprador").value || "Desconhecido"; // PEGAR NOME DO COMPRADOR
+  const {id,nome,limite,quantidade,comprador}=currentSelection;
+
+  if(!comprador){
+    alert("Por favor, digite seu nome antes de confirmar a compra.");
+    return;
+  }
+
   document.getElementById('conf-msg').textContent='Registrando...';
   try{
     const params = new URLSearchParams({ nome, quantidade:String(quantidade), limite:String(limite), comprador });
