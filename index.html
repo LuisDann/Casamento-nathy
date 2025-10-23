@@ -82,7 +82,7 @@ const SCRIPT_URL = {
   POST: "https://proxy-casamento-5958w2poo-luisdanns-projects.vercel.app/comprar"
 };
 
-
+// Preços e imagens
 const precos = {
   "Sanduicheira":100,"Liquidificador":100,"Mixer":170,"Jogo de canecas":75,
   "Jogo de pratos de porcelanato":100,"Utensílios de silicone":50,"Boleira de vidro":50,
@@ -156,8 +156,8 @@ const imagensProdutos = {
   "Varal de teto":"imagens/VARALTETO.jpg"
 };
 
+// Itens e vales
 const itensNormais = Object.keys(precos);
-
 const vales = [
   {nome:"Micro-ondas", limite:6},{nome:"Fogão", limite:10},{nome:"Armário de cozinha", limite:5},
   {nome:"Geladeira", limite:15},{nome:"Painel para TV", limite:2},{nome:"Sofá", limite:10},
@@ -218,7 +218,6 @@ function criarCard(nome,id,limite){
   return div;
 }
 
-// Função que previne quantidade inválida
 function verificarQuantidade(input,limite){
   if(input.value<1) input.value=1;
   if(input.value>limite) input.value=limite;
