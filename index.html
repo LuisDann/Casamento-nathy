@@ -76,10 +76,10 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 
 <script>
 const PIX_KEY = "21 971963818";
-// URLs do proxy serverless
+// URLs do proxy serverless no Vercel
 const SCRIPT_URL = {
-  GET: "/api/dados",
-  POST: "/api/comprar"
+  GET: "https://casamento-nathy-paqlo7q3g-luisdanns-projects.vercel.app/dados",
+  POST: "https://casamento-nathy-paqlo7q3g-luisdanns-projects.vercel.app/comprar"
 };
 
 const precos = {
@@ -206,8 +206,8 @@ function criarCard(nome,id,limite){
     <img src="${imgSrc}" alt="${nome}">
     <div class="card-content">
       <h3>${nome}</h3>
-      <p>${limite>1?'Quantidade disponível: '+limite:'Quantidade: 1'}</p>
-      <input type="number" id="quantidade-${id}" value="1" min="1" max="${limite}">
+      <p id="disponivel-${id}">${limite>1?'Quantidade disponível: '+limite:'Quantidade: 1'}</p>
+      <input type="number" id="quantidade-${id}" value="1" min="1" max="${limite}" onchange="verificarQuantidade(this,${limite})">
       <p>Valor unitário: R$ ${preco.toFixed(2).replace('.',',')}</p>
       <div style="display:flex;gap:.5rem;justify-content:center;align-items:center">
         <button onclick="abrirConfirm(this)">Escolher</button>
@@ -215,6 +215,12 @@ function criarCard(nome,id,limite){
     </div>
   `;
   return div;
+}
+
+// Função que previne quantidade inválida
+function verificarQuantidade(input,limite){
+  if(input.value<1) input.value=1;
+  if(input.value>limite) input.value=limite;
 }
 
 async function atualizarCards(){
@@ -228,10 +234,15 @@ async function atualizarCards(){
           const btn=card.querySelector('button');
           const limite=parseInt(card.dataset.limite);
           const totalComprado=parseInt(item.quantidade);
+          const restante = limite - totalComprado;
+          const pDisponivel = card.querySelector(`#disponivel-${card.dataset.id}`);
+          if(pDisponivel) pDisponivel.textContent = restante>0?'Quantidade disponível: '+restante:'Esgotado';
           if(limite>0 && totalComprado>=limite){
             btn.textContent='Escolhido';
             btn.disabled=true;
             card.style.opacity=0.6;
+            const input = card.querySelector('input');
+            if(input) input.value=limite;
           } else {
             btn.textContent='Escolher';
             btn.disabled=false;
@@ -252,7 +263,7 @@ async function abrirConfirm(btn){
   const id=card.dataset.id;
   const nome=card.dataset.nome;
   const limite=parseInt(card.dataset.limite);
-  const quantidade=parseInt(document.getElementById(`quantidade-${id}`).value)||1;
+  let quantidade=parseInt(document.getElementById(`quantidade-${id}`).value)||1;
 
   if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
 
@@ -267,10 +278,9 @@ async function abrirConfirm(btn){
     }
   }catch(err){ console.error(err); }
 
-  if(limite>0 && (totalComprado+quantidade)>limite){
-    alert("Quantidade maior que o limite disponível");
-    return;
-  }
+  const restante = limite - totalComprado;
+  if(restante<=0){ alert("Quantidade esgotada"); return; }
+  if(quantidade>restante){ alert("Quantidade maior que o limite disponível"); quantidade = restante; }
 
   currentSelection={id:String(id),nome,limite,quantidade};
   const preco=precos[nome]||100;
