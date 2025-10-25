@@ -324,12 +324,14 @@ async function confirmarCompra(){
       limite: "1",
       comprador: "João Silva"
     };
-    const res = await fetch(endereco, {
-      method: 'POST',
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(dados),
-      mode: 'no-cors'
-    });
+  const response = await fetch(
+    "https://script.google.com/macros/s/AKfycbyapZ0u8gL8jO1fdPsZEKQWsbbH0K592FL4gB_qBlUzD5K6n60HBtT2dpNBLdFHoJNYaA/exec",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados)
+    }
+  );
 
 
     //return
@@ -341,7 +343,7 @@ async function confirmarCompra(){
     });
 
     */
-    const data = await res.json();
+    const data = await response.json();
     if(data.status==='ok'){
       marcarComoEscolhido(id);
       fecharConfirm();
