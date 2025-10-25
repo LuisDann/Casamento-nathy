@@ -316,7 +316,7 @@ async function confirmarCompra(){
   try{
     const params = new URLSearchParams({ nome, quantidade:String(quantidade), limite:String(limite), comprador });
 
-    const endereco = "https://script.google.com/macros/s/AKfycbwf8KdvVf-OKcDuR_C0jbOHcDLc2n49mgrps8WEHJr9B0gQ6TprN9VXaORgBF10HzTrVw/exec";
+    const endereco = "https://script.google.com/macros/s/AKfycbyapZ0u8gL8jO1fdPsZEKQWsbbH0K592FL4gB_qBlUzD5K6n60HBtT2dpNBLdFHoJNYaA/exec";
 
     const res = await fetch(endereco, {
       method: 'POST',
