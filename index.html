@@ -310,13 +310,31 @@ async function confirmarCompra(){
     return;
   }
 
+
+
   document.getElementById('conf-msg').textContent='Registrando...';
   try{
     const params = new URLSearchParams({ nome, quantidade:String(quantidade), limite:String(limite), comprador });
+
+    const endereco = "https://script.google.com/macros/s/AKfycbwf8KdvVf-OKcDuR_C0jbOHcDLc2n49mgrps8WEHJr9B0gQ6TprN9VXaORgBF10HzTrVw/exec";
+
+    const res = await fetch(endereco, {
+      method: 'POST',
+      headers: {"Content-Type": "application//json"},
+      body: params,
+      mode: 'no-cors'
+    });
+
+
+    return
+
+    /*
     const res = await fetch(SCRIPT_URL.POST, {
       method: 'POST',
       body: params
     });
+
+    */
     const data = await res.json();
     if(data.status==='ok'){
       marcarComoEscolhido(id);
