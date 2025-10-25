@@ -318,10 +318,16 @@ async function confirmarCompra(){
 
     const endereco = "https://script.google.com/macros/s/AKfycbyapZ0u8gL8jO1fdPsZEKQWsbbH0K592FL4gB_qBlUzD5K6n60HBtT2dpNBLdFHoJNYaA/exec";
 
+    const dados = {
+      nome: "Batedeira",
+      quantidade: "2",
+      limite: "1",
+      comprador: "João Silva"
+    };
     const res = await fetch(endereco, {
       method: 'POST',
       headers: {"Content-Type": "application/json"},
-      body: params,
+      body: JSON.stringify(dados),
       mode: 'no-cors'
     });
 
