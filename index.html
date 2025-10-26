@@ -32,6 +32,16 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 #compradorWrapper{max-width:480px;margin:1rem auto;text-align:center}
 #nomeComprador{padding:.5rem;width:80%;border-radius:5px;border:1px solid #ccc;font-size:1rem}
 .titulo-secao{grid-column:1/-1;font-size:1.5rem;font-weight:bold;color:#2e7d32;margin:1.5rem 0}
+
+/* Loading */
+#loading {
+  text-align: center;
+  font-size: 1rem;
+  color: #2e7d32;
+  font-weight: bold;
+  display: none;
+  margin-top: 1rem;
+}
 </style>
 </head>
 <body>
@@ -40,6 +50,8 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 <div id="compradorWrapper">
   <input type="text" id="nomeComprador" placeholder="Digite seu nome">
 </div>
+
+<div id="loading">🔄 Atualizando lista...</div>
 
 <main id="catalogo"></main>
 
@@ -76,15 +88,11 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 
 <script>
 const PIX_KEY = "21 971963818";
-// URLs do proxy serverless no Vercel
 const SCRIPT_URL = {
   GET: "https://script.google.com/macros/s/AKfycbyapZ0u8gL8jO1fdPsZEKQWsbbH0K592FL4gB_qBlUzD5K6n60HBtT2dpNBLdFHoJNYaA/exec",
   POST: "https://script.google.com/macros/s/AKfycbyapZ0u8gL8jO1fdPsZEKQWsbbH0K592FL4gB_qBlUzD5K6n60HBtT2dpNBLdFHoJNYaA/exec"
-};       
+};
 
-
-
-// Preços e imagens
 const precos = {
   "Sanduicheira":100,"Liquidificador":100,"Mixer":170,"Jogo de canecas":75,
   "Jogo de pratos de porcelanato":100,"Utensílios de silicone":50,"Boleira de vidro":50,
@@ -99,66 +107,27 @@ const precos = {
 };
 
 const imagensProdutos = {
-  "Ar-condicionado":"imagens/ARCONDICIONADO.jpg",
-  "Armário":"imagens/ARMARIO.jpg",
-  "Armário de cozinha":"imagens/ARMARIODECOZINHA.jpg",
-  "Aspirador de pó":"imagens/ASPIRADORDEPO.jpg",
-  "Boleira de vidro":"imagens/BOLEIRADEVIDRO.jpg",
-  "Capa de almofada":"imagens/CAPADEALMOFADA.jpg",
-  "Cabeceira":"imagens/CABECEIRA.jpg",
-  "Capa de colchão impermeável":"imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg",
-  "Cesto de roupa":"imagens/SEXTODEROUPA.jpg",
-  "Chaleira":"imagens/CHALEIRA.jpg",
-  "Colchão de casa D20":"imagens/COLCHAO.jpg",
-  "Cortina":"imagens/CORTINA.jpg",
-  "Edredom":"imagens/EDREDOM.jpg",
-  "Escorredores de inox":"imagens/ESCORREDORDEINOX.jpeg",
-  "Escorredor de louça de parede":"imagens/ESCORREDORDELOUÇADEPARADE.jpg",
-  "Espelho":"imagens/ESPELHO.jpg",
-  "Ferro de passar roupa":"imagens/FERRODEPASSAR.jpg",
-  "Fogão":"imagens/FOGAO.jpg",
-  "Garrafa térmica":"imagens/GARRAFATERMICA.jpg",
-  "Geladeira":"imagens/GELADEIRA.jpg",
-  "Jarra de suco":"imagens/JARRADESUCO.jpg",
-  "Jogo de canecas":"imagens/JOGODECANECAS.jpg",
-  "Jogo de copos de vidro":"imagens/JOGODECOPOSDEVIDRO.jpg",
-  "2 jogos de lençol":"imagens/JOGODELENÇOL.jpg",
-  "Jogo de panela":"imagens/JOGODEPANELA.jpg",
-  "Jogo de pirex":"imagens/JOGODEPIREX.jpg",
-  "Jogo de pratos de porcelanato":"imagens/JOGODEPRATOSPORCELANADO.jpg",
-  "Jogo de tabuleiros":"imagens/JOGODETABULEIROS.jpg",
+  "Ar-condicionado":"imagens/ARCONDICIONADO.jpg","Armário":"imagens/ARMARIO.jpg","Armário de cozinha":"imagens/ARMARIODECOZINHA.jpg",
+  "Aspirador de pó":"imagens/ASPIRADORDEPO.jpg","Boleira de vidro":"imagens/BOLEIRADEVIDRO.jpg","Capa de almofada":"imagens/CAPADEALMOFADA.jpg",
+  "Cabeceira":"imagens/CABECEIRA.jpg","Capa de colchão impermeável":"imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg","Cesto de roupa":"imagens/SEXTODEROUPA.jpg",
+  "Chaleira":"imagens/CHALEIRA.jpg","Colchão de casa D20":"imagens/COLCHAO.jpg","Cortina":"imagens/CORTINA.jpg","Edredom":"imagens/EDREDOM.jpg",
+  "Escorredores de inox":"imagens/ESCORREDORDEINOX.jpeg","Escorredor de louça de parede":"imagens/ESCORREDORDELOUÇADEPARADE.jpg","Espelho":"imagens/ESPELHO.jpg",
+  "Ferro de passar roupa":"imagens/FERRODEPASSAR.jpg","Fogão":"imagens/FOGAO.jpg","Garrafa térmica":"imagens/GARRAFATERMICA.jpg","Geladeira":"imagens/GELADEIRA.jpg",
+  "Jarra de suco":"imagens/JARRADESUCO.jpg","Jogo de canecas":"imagens/JOGODECANECAS.jpg","Jogo de copos de vidro":"imagens/JOGODECOPOSDEVIDRO.jpg",
+  "2 jogos de lençol":"imagens/JOGODELENÇOL.jpg","Jogo de panela":"imagens/JOGODEPANELA.jpg","Jogo de pirex":"imagens/JOGODEPIREX.jpg",
+  "Jogo de pratos de porcelanato":"imagens/JOGODEPRATOSPORCELANADO.jpg","Jogo de tabuleiros":"imagens/JOGODETABULEIROS.jpg",
   "Kit porta algodão, escova e cotonete + saboneteira":"imagens/Kit porta algodão, escova e cotonete + saboneteira.jpg",
-  "Kits suporte de toalha":"imagens/KITSUPORTEDETOALHA.jpg",
-  "Liquidificador":"imagens/LIQUIDIFICADOR.jpg",
-  "Lixeiras":"imagens/LIXEIRA.jpeg",
-  "Micro-ondas":"imagens/MICROONDAS.jpg",
-  "Máquina de lavar":"imagens/MAQUINADELAVAR.jpeg",
-  "Mixer":"imagens/MIXER.jpg",
-  "Mope":"imagens/MOPE.jpg",
-  "Painel para TV":"imagens/PAINELPARATV.jpg",
-  "Panela de pressão":"imagens/PANELADEPRESSÃO.jpg",
-  "Potes herméticos J1":"imagens/POTESHERMETICOSJ1.jpg",
-  "Potes herméticos J2":"imagens/POTESHERMETICOSJ2.jpg",
-  "Ralador":"imagens/RALADOR.jpg",
-  "Suporte para papel higiênico":"imagens/SUPORTEHIGIENICO.jpeg",
-  "Sanduicheira":"imagens/SANDUUICHEIRA.jpg",
-  "Sapateira":"imagens/SAPATEIRA.jpg",
-  "Sofá":"imagens/SOFÁ.jpg",
-  "Suporte higiene":"imagens/SUPORTEHIGIENE.jpg",
-  "Travesseiros":"imagens/TRAVESSEIRO.jpeg",
-  "Tábua de inox":"imagens/TABUADEINOX.jpg",
-  "Tábua de passar roupa":"imagens/TABUADEPASSAR.jpg",
-  "Talheres":"imagens/TALHERES.jpg",
-  "Tapete":"imagens/TAPETE.jpg",
-  "Televisão":"imagens/TELEVISÃO.jpg",
-  "Toalhas de banho":"imagens/TOALHASDEBANHO.jpg",
-  "Toalhas de rosto":"imagens/TOALHASDEROSTO.jpg",
-  "Utensílios de silicone":"imagens/UTENCILIOSDESILICONE.jpg",
-  "Varal de chão":"imagens/VARALCHAO.jpg",
-  "Varal de teto":"imagens/VARALTETO.jpg"
+  "Kits suporte de toalha":"imagens/KITSUPORTEDETOALHA.jpg","Liquidificador":"imagens/LIQUIDIFICADOR.jpg","Lixeiras":"imagens/LIXEIRA.jpeg",
+  "Micro-ondas":"imagens/MICROONDAS.jpg","Máquina de lavar":"imagens/MAQUINADELAVAR.jpeg","Mixer":"imagens/MIXER.jpg","Mope":"imagens/MOPE.jpg",
+  "Painel para TV":"imagens/PAINELPARATV.jpg","Panela de pressão":"imagens/PANELADEPRESSÃO.jpg","Potes herméticos J1":"imagens/POTESHERMETICOSJ1.jpg",
+  "Potes herméticos J2":"imagens/POTESHERMETICOSJ2.jpg","Ralador":"imagens/RALADOR.jpg","Suporte para papel higiênico":"imagens/SUPORTEHIGIENICO.jpeg",
+  "Sanduicheira":"imagens/SANDUUICHEIRA.jpg","Sapateira":"imagens/SAPATEIRA.jpg","Sofá":"imagens/SOFÁ.jpg","Suporte higiene":"imagens/SUPORTEHIGIENE.jpg",
+  "Travesseiros":"imagens/TRAVESSEIRO.jpeg","Tábua de inox":"imagens/TABUADEINOX.jpg","Tábua de passar roupa":"imagens/TABUADEPASSAR.jpg",
+  "Talheres":"imagens/TALHERES.jpg","Tapete":"imagens/TAPETE.jpg","Televisão":"imagens/TELEVISÃO.jpg","Toalhas de banho":"imagens/TOALHASDEBANHO.jpg",
+  "Toalhas de rosto":"imagens/TOALHASDEROSTO.jpg","Utensílios de silicone":"imagens/UTENCILIOSDESILICONE.jpg",
+  "Varal de chão":"imagens/VARALCHAO.jpg","Varal de teto":"imagens/VARALTETO.jpg"
 };
 
-// Itens e vales
 const itensNormais = Object.keys(precos);
 const vales = [
   {nome:"Micro-ondas", limite:6},{nome:"Fogão", limite:10},{nome:"Armário de cozinha", limite:5},
@@ -169,30 +138,29 @@ const vales = [
 ];
 
 const catalogo = document.getElementById("catalogo");
+const loading = document.getElementById("loading");
+let currentSelection=null;
 
 async function criarCards(){
   let id=1;
-
-  const tituloItens = document.createElement('div');
+  const tituloItens=document.createElement('div');
   tituloItens.className='titulo-secao';
   tituloItens.textContent='🎁 Itens Normais';
   catalogo.appendChild(tituloItens);
   for(const nome of itensNormais){
-    const card = criarCard(nome,id,1);
+    const card=criarCard(nome,id,1);
     catalogo.appendChild(card);
     id++;
   }
-
   const tituloVales=document.createElement('div');
   tituloVales.className='titulo-secao';
   tituloVales.textContent='🎟️ Vales';
   catalogo.appendChild(tituloVales);
   for(const v of vales){
-    const card = criarCard(v.nome,id,v.limite);
+    const card=criarCard(v.nome,id,v.limite);
     catalogo.appendChild(card);
     id++;
   }
-
   await atualizarCards();
   setInterval(atualizarCards,10000);
 }
@@ -227,25 +195,26 @@ function verificarQuantidade(input,limite){
 
 async function atualizarCards(){
   try{
-    const res = await fetch(SCRIPT_URL.GET);
-    const data = await res.json();
+    loading.style.display="block";
+    const res=await fetch(SCRIPT_URL.GET);
+    const data=await res.json();
     if(data.dados){
       data.dados.forEach(item=>{
-        const cards = document.querySelectorAll(`.card[data-nome="${item.nome}"]`);
+        const cards=document.querySelectorAll(`.card[data-nome="${item.nome}"]`);
         cards.forEach(card=>{
           const btn=card.querySelector('button');
           const limite=parseInt(card.dataset.limite);
           const totalComprado=parseInt(item.quantidade);
-          const restante = limite - totalComprado;
-          const pDisponivel = card.querySelector(`#disponivel-${card.dataset.id}`);
-          if(pDisponivel) pDisponivel.textContent = restante>0?'Quantidade disponível: '+restante:'Esgotado';
-          if(limite>0 && totalComprado>=limite){
+          const restante=limite-totalComprado;
+          const pDisponivel=card.querySelector(`#disponivel-${card.dataset.id}`);
+          if(pDisponivel)pDisponivel.textContent=restante>0?'Quantidade disponível: '+restante:'Esgotado';
+          if(limite>0&&totalComprado>=limite){
             btn.textContent='Escolhido';
             btn.disabled=true;
             card.style.opacity=0.6;
-            const input = card.querySelector('input');
-            if(input) input.value=limite;
-          } else {
+            const input=card.querySelector('input');
+            if(input)input.value=limite;
+          }else{
             btn.textContent='Escolher';
             btn.disabled=false;
             card.style.opacity=1;
@@ -253,12 +222,12 @@ async function atualizarCards(){
         });
       });
     }
-  }catch(err){ console.error('Erro ao atualizar cards',err); }
+  }catch(err){console.error('Erro ao atualizar cards',err);}
+  finally{loading.style.display="none";}
 }
 
 const confirmModal=document.getElementById('confirmModal');
 const pixModal=document.getElementById('pixModal');
-let currentSelection=null;
 
 async function abrirConfirm(btn){
   const card=btn.closest('.card');
@@ -266,113 +235,60 @@ async function abrirConfirm(btn){
   const nome=card.dataset.nome;
   const limite=parseInt(card.dataset.limite);
   let quantidade=parseInt(document.getElementById(`quantidade-${id}`).value)||1;
-
-  if(quantidade<1){ alert("Informe uma quantidade válida"); return; }
-
-  const comprador = document.getElementById("nomeComprador").value.trim();
-  if(!comprador){ alert("Por favor, digite seu nome antes de escolher o presente."); return; }
-
+  if(quantidade<1){alert("Informe uma quantidade válida");return;}
+  const comprador=document.getElementById("nomeComprador").value.trim();
+  if(!comprador){alert("Por favor, digite seu nome antes de escolher o presente.");return;}
   let totalComprado=0;
   try{
-    const res = await fetch(SCRIPT_URL.GET);
-    const data = await res.json();
+    const res=await fetch(SCRIPT_URL.GET);
+    const data=await res.json();
     if(data.dados){
-      totalComprado = data.dados
-        .filter(item => item.nome === nome)
-        .reduce((acc,item)=>acc+Number(item.quantidade),0);
+      totalComprado=data.dados.filter(item=>item.nome===nome).reduce((acc,item)=>acc+Number(item.quantidade),0);
     }
-  }catch(err){ console.error(err); }
-
-  const restante = limite - totalComprado;
-  if(restante<=0){ alert("Quantidade esgotada"); return; }
-  if(quantidade>restante){ alert("Quantidade maior que o limite disponível"); quantidade = restante; }
-
+  }catch(err){console.error(err);}
+  const restante=limite-totalComprado;
+  if(restante<=0){alert("Quantidade esgotada");return;}
+  if(quantidade>restante){alert("Quantidade maior que o limite disponível");quantidade=restante;}
   currentSelection={id:String(id),nome,limite,quantidade,comprador};
   const preco=precos[nome]||100;
   document.getElementById('conf-nome').textContent=`Produto: ${nome}`;
   document.getElementById('conf-qtd').textContent=`Quantidade: ${quantidade}`;
   document.getElementById('conf-unit').textContent=`Valor unitário: R$ ${preco.toFixed(2).replace('.',',')}`;
   document.getElementById('conf-total').textContent=`Total: R$ ${(preco*quantidade).toFixed(2).replace('.',',')}`;
-  document.getElementById('pix-key').textContent=PIX_KEY;
-  document.getElementById('conf-msg').textContent='';
   confirmModal.classList.add('active');
 }
 
-function fecharConfirm(){ confirmModal.classList.remove('active'); currentSelection=null; }
-function copiarPix(){ navigator.clipboard.writeText(PIX_KEY).then(()=>{ document.getElementById('conf-msg').textContent='Chave PIX copiada.'; }).catch(()=>{ document.getElementById('conf-msg').textContent='Não foi possível copiar.'; }); }
+function fecharConfirm(){confirmModal.classList.remove('active');}
+function fecharPix(){pixModal.classList.remove('active');}
 
 async function confirmarCompra(){
-  if(!currentSelection) return;
-  const {id,nome,limite,quantidade,comprador}=currentSelection;
-
-  if(!comprador){
-    alert("Por favor, digite seu nome antes de confirmar a compra.");
-    return;
-  }
-
-  console.log('Confirmando compra:',currentSelection);
-
-  document.getElementById('conf-msg').textContent='Registrando...';
+  if(!currentSelection)return;
+  const {nome,quantidade,comprador}=currentSelection;
+  const confMsg=document.getElementById('conf-msg');
+  confMsg.textContent="Enviando...";
   try{
-    const params = new URLSearchParams({ nome, quantidade:String(quantidade), limite:String(limite), comprador });
-
-    const endereco = "https://script.google.com/macros/s/AKfycbyapZ0u8gL8jO1fdPsZEKQWsbbH0K592FL4gB_qBlUzD5K6n60HBtT2dpNBLdFHoJNYaA/exec";
-                      //proxy-casamento-mesh3umv4-luisdanns-projects.vercel.app/dados.js
-    const dados = {
-      nome: "Local",
-      quantidade: "2",
-      limite: "1",
-      comprador: "João Silva"
-    };
-
-  const res = await fetch(
-    "https://script.google.com/macros/s/AKfycbyapZ0u8gL8jO1fdPsZEKQWsbbH0K592FL4gB_qBlUzD5K6n60HBtT2dpNBLdFHoJNYaA/exec",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dados),
-      mode: 'no-cors'
-    }
-  );
-
-  
-    //return
-
-    /*
-    const res = await fetch(SCRIPT_URL.POST, {
-      method: 'POST',
-      body: params
+    await fetch(SCRIPT_URL.POST,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({nome,quantidade,comprador,totalComprado:0,status:"pendente"})
     });
-
-    */
-    const data = await res.json();
-    if(data.status==='ok'){
-      marcarComoEscolhido(id);
-      fecharConfirm();
-      abrirPixModal();
-      await atualizarCards();
-    } else {
-      document.getElementById('conf-msg').textContent=data.mensagem||'Erro ao registrar.';
-    }
-  } catch(err){ 
-    console.error(err); 
-    document.getElementById('conf-msg').textContent='Erro de comunicação.'; 
+    confMsg.textContent="✅ Enviado com sucesso!";
+    setTimeout(()=>{
+      confirmModal.classList.remove('active');
+      pixModal.classList.add('active');
+      atualizarCards();
+    },800);
+  }catch(err){
+    confMsg.textContent="❌ Erro: "+err.message;
   }
 }
 
-function marcarComoEscolhido(id){
-  const card=document.querySelector(`.card[data-id="${id}"]`);
-  if(card){
-    card.querySelector('button').textContent='Escolhido';
-    card.querySelector('button').disabled=true;
-    card.style.opacity=0.6;
-  }
+function copiarPix(){
+  navigator.clipboard.writeText(PIX_KEY).then(()=>alert("Pix copiado!"));
 }
 
-function abrirPixModal(){ pixModal.classList.add('active'); }
-function fecharPix(){ pixModal.classList.remove('active'); }
-
-criarCards();
+window.onload=criarCards;
 </script>
 </body>
 </html>
