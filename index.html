@@ -89,45 +89,54 @@ input{padding:.5rem;width:80px;text-align:center;margin-bottom:.8rem;border-radi
 <script>
 const PIX_KEY = "21 971963818";
 const SCRIPT_URL = {
-  GET: "https://script.google.com/macros/s/AKfycbyapZ0u8gL8jO1fdPsZEKQWsbbH0K592FL4gB_qBlUzD5K6n60HBtT2dpNBLdFHoJNYaA/exec",
+  GET: "https://script.google.com/macros/s/AKfycbzn99aofuKW2OkZzneTTEEiNHzRiptTVFhypk16FAWfWbWN5psdzVdD6zIoEracCpQafQ/exec",
   POST: "https://script.google.com/macros/s/AKfycbyapZ0u8gL8jO1fdPsZEKQWsbbH0K592FL4gB_qBlUzD5K6n60HBtT2dpNBLdFHoJNYaA/exec"
 };
 
-const precos = {
-  "Sanduicheira":100,"Liquidificador":100,"Mixer":170,"Jogo de canecas":75,
-  "Jogo de pratos de porcelanato":100,"Utensílios de silicone":50,"Boleira de vidro":50,
-  "Garrafa térmica":55,"Escorredor de louça de parede":60,"Escorredores de inox":70,
-  "Talheres":60,"Potes herméticos J1":90,"Potes herméticos J2":105,"Jogo de copos de vidro":65,
-  "Jogo de tabuleiros":85,"Jogo de pirex":100,"Ralador":50,"Tábua de inox":50,"Lixeiras":55,
-  "Suporte para papel higiênico":55,"Kits suporte de toalha":75,"Espelho":80,"Toalhas de rosto":50,
-  "Kit porta algodão, escova e cotonete + saboneteira":70,"Cortina":100,"Tapete":70,
-  "Capa de almofada":90,"Edredom":120,"2 jogos de lençol":70,"Travesseiros":75,"Cabeceira":60,
-  "Capa de colchão impermeável":50,"Cesto de roupa":50,"Mope":50,"Ferro de passar roupa":110,
-  "Tábua de passar roupa":100,"Varal de teto":65,"Varal de chão":90
-};
+// =======================
+// Lista de preços e imagens
+// =======================
+const precos = { "Sanduicheira":100, "Liquidificador":100, "Mixer":170, "Jogo de canecas":75,
+"Jogo de pratos de porcelanato":100, "Utensílios de silicone":50, "Boleira de vidro":50,
+"Garrafa térmica":55, "Escorredor de louça de parede":60, "Escorredores de inox":70,
+"Talheres":60, "Potes herméticos J1":90, "Potes herméticos J2":105, "Jogo de copos de vidro":65,
+"Jogo de tabuleiros":85, "Jogo de pirex":100, "Ralador":50, "Tábua de inox":50, "Lixeiras":55,
+"Suporte para papel higiênico":55, "Kits suporte de toalha":75, "Espelho":80, "Toalhas de rosto":50,
+"Kit porta algodão, escova e cotonete + saboneteira":70, "Cortina":100, "Tapete":70,
+"Capa de almofada":90, "Edredom":120, "2 jogos de lençol":70, "Travesseiros":75, "Cabeceira":60,
+"Capa de colchão impermeável":50, "Cesto de roupa":50, "Mope":50, "Ferro de passar roupa":110,
+"Tábua de passar roupa":100, "Varal de teto":65, "Varal de chão":90 };
 
-const imagensProdutos = {
-  "Ar-condicionado":"imagens/ARCONDICIONADO.jpg","Armário":"imagens/ARMARIO.jpg","Armário de cozinha":"imagens/ARMARIODECOZINHA.jpg",
-  "Aspirador de pó":"imagens/ASPIRADORDEPO.jpg","Boleira de vidro":"imagens/BOLEIRADEVIDRO.jpg","Capa de almofada":"imagens/CAPADEALMOFADA.jpg",
-  "Cabeceira":"imagens/CABECEIRA.jpg","Capa de colchão impermeável":"imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg","Cesto de roupa":"imagens/SEXTODEROUPA.jpg",
-  "Chaleira":"imagens/CHALEIRA.jpg","Colchão de casa D20":"imagens/COLCHAO.jpg","Cortina":"imagens/CORTINA.jpg","Edredom":"imagens/EDREDOM.jpg",
-  "Escorredores de inox":"imagens/ESCORREDORDEINOX.jpeg","Escorredor de louça de parede":"imagens/ESCORREDORDELOUÇADEPARADE.jpg","Espelho":"imagens/ESPELHO.jpg",
-  "Ferro de passar roupa":"imagens/FERRODEPASSAR.jpg","Fogão":"imagens/FOGAO.jpg","Garrafa térmica":"imagens/GARRAFATERMICA.jpg","Geladeira":"imagens/GELADEIRA.jpg",
-  "Jarra de suco":"imagens/JARRADESUCO.jpg","Jogo de canecas":"imagens/JOGODECANECAS.jpg","Jogo de copos de vidro":"imagens/JOGODECOPOSDEVIDRO.jpg",
-  "2 jogos de lençol":"imagens/JOGODELENÇOL.jpg","Jogo de panela":"imagens/JOGODEPANELA.jpg","Jogo de pirex":"imagens/JOGODEPIREX.jpg",
-  "Jogo de pratos de porcelanato":"imagens/JOGODEPRATOSPORCELANADO.jpg","Jogo de tabuleiros":"imagens/JOGODETABULEIROS.jpg",
-  "Kit porta algodão, escova e cotonete + saboneteira":"imagens/Kit porta algodão, escova e cotonete + saboneteira.jpg",
-  "Kits suporte de toalha":"imagens/KITSUPORTEDETOALHA.jpg","Liquidificador":"imagens/LIQUIDIFICADOR.jpg","Lixeiras":"imagens/LIXEIRA.jpeg",
-  "Micro-ondas":"imagens/MICROONDAS.jpg","Máquina de lavar":"imagens/MAQUINADELAVAR.jpeg","Mixer":"imagens/MIXER.jpg","Mope":"imagens/MOPE.jpg",
-  "Painel para TV":"imagens/PAINELPARATV.jpg","Panela de pressão":"imagens/PANELADEPRESSÃO.jpg","Potes herméticos J1":"imagens/POTESHERMETICOSJ1.jpg",
-  "Potes herméticos J2":"imagens/POTESHERMETICOSJ2.jpg","Ralador":"imagens/RALADOR.jpg","Suporte para papel higiênico":"imagens/SUPORTEHIGIENICO.jpeg",
-  "Sanduicheira":"imagens/SANDUUICHEIRA.jpg","Sapateira":"imagens/SAPATEIRA.jpg","Sofá":"imagens/SOFÁ.jpg","Suporte higiene":"imagens/SUPORTEHIGIENE.jpg",
-  "Travesseiros":"imagens/TRAVESSEIRO.jpeg","Tábua de inox":"imagens/TABUADEINOX.jpg","Tábua de passar roupa":"imagens/TABUADEPASSAR.jpg",
-  "Talheres":"imagens/TALHERES.jpg","Tapete":"imagens/TAPETE.jpg","Televisão":"imagens/TELEVISÃO.jpg","Toalhas de banho":"imagens/TOALHASDEBANHO.jpg",
-  "Toalhas de rosto":"imagens/TOALHASDEROSTO.jpg","Utensílios de silicone":"imagens/UTENCILIOSDESILICONE.jpg",
-  "Varal de chão":"imagens/VARALCHAO.jpg","Varal de teto":"imagens/VARALTETO.jpg"
-};
+const imagensProdutos = { "Ar-condicionado":"imagens/ARCONDICIONADO.jpg", "Armário":"imagens/ARMARIO.jpg",
+"Armário de cozinha":"imagens/ARMARIODECOZINHA.jpg", "Aspirador de pó":"imagens/ASPIRADORDEPO.jpg",
+"Boleira de vidro":"imagens/BOLEIRADEVIDRO.jpg", "Capa de almofada":"imagens/CAPADEALMOFADA.jpg",
+"Cabeceira":"imagens/CABECEIRA.jpg", "Capa de colchão impermeável":"imagens/CAPADECOLCHÃOIMPERMEAVEL.jpg",
+"Cesto de roupa":"imagens/SEXTODEROUPA.jpg", "Chaleira":"imagens/CHALEIRA.jpg",
+"Colchão de casa D20":"imagens/COLCHAO.jpg", "Cortina":"imagens/CORTINA.jpg", "Edredom":"imagens/EDREDOM.jpg",
+"Escorredores de inox":"imagens/ESCORREDORDEINOX.jpeg", "Escorredor de louça de parede":"imagens/ESCORREDORDELOUÇADEPARADE.jpg",
+"Espelho":"imagens/ESPELHO.jpg", "Ferro de passar roupa":"imagens/FERRODEPASSAR.jpg", "Fogão":"imagens/FOGAO.jpg",
+"Garrafa térmica":"imagens/GARRAFATERMICA.jpg", "Geladeira":"imagens/GELADEIRA.jpg", "Jarra de suco":"imagens/JARRADESUCO.jpg",
+"Jogo de canecas":"imagens/JOGODECANECAS.jpg", "Jogo de copos de vidro":"imagens/JOGODECOPOSDEVIDRO.jpg",
+"2 jogos de lençol":"imagens/JOGODELENÇOL.jpg", "Jogo de panela":"imagens/JOGODEPANELA.jpg",
+"Jogo de pirex":"imagens/JOGODEPIREX.jpg", "Jogo de pratos de porcelanato":"imagens/JOGODEPRATOSPORCELANADO.jpg",
+"Jogo de tabuleiros":"imagens/JOGODETABULEIROS.jpg",
+"Kit porta algodão, escova e cotonete + saboneteira":"imagens/Kit porta algodão, escova e cotonete + saboneteira.jpg",
+"Kits suporte de toalha":"imagens/KITSUPORTEDETOALHA.jpg", "Liquidificador":"imagens/LIQUIDIFICADOR.jpg",
+"Lixeiras":"imagens/LIXEIRA.jpeg", "Micro-ondas":"imagens/MICROONDAS.jpg", "Máquina de lavar":"imagens/MAQUINADELAVAR.jpeg",
+"Mixer":"imagens/MIXER.jpg", "Mope":"imagens/MOPE.jpg", "Painel para TV":"imagens/PAINELPARATV.jpg",
+"Panela de pressão":"imagens/PANELADEPRESSÃO.jpg", "Potes herméticos J1":"imagens/POTESHERMETICOSJ1.jpg",
+"Potes herméticos J2":"imagens/POTESHERMETICOSJ2.jpg", "Ralador":"imagens/RALADOR.jpg",
+"Suporte para papel higiênico":"imagens/SUPORTEHIGIENICO.jpeg", "Sanduicheira":"imagens/SANDUUICHEIRA.jpg",
+"Sapateira":"imagens/SAPATEIRA.jpg", "Sofá":"imagens/SOFÁ.jpg", "Suporte higiene":"imagens/SUPORTEHIGIENE.jpg",
+"Travesseiros":"imagens/TRAVESSEIRO.jpeg", "Tábua de inox":"imagens/TABUADEINOX.jpg",
+"Tábua de passar roupa":"imagens/TABUADEPASSAR.jpg", "Talheres":"imagens/TALHERES.jpg",
+"Tapete":"imagens/TAPETE.jpg", "Televisão":"imagens/TELEVISÃO.jpg", "Toalhas de banho":"imagens/TOALHASDEBANHO.jpg",
+"Toalhas de rosto":"imagens/TOALHASDEROSTO.jpg", "Utensílios de silicone":"imagens/UTENCILIOSDESILICONE.jpg",
+"Varal de chão":"imagens/VARALCHAO.jpg", "Varal de teto":"imagens/VARALTETO.jpg" };
 
+// =======================
+// Itens e vales
+// =======================
 const itensNormais = Object.keys(precos);
 const vales = [
   {nome:"Micro-ondas", limite:6},{nome:"Fogão", limite:10},{nome:"Armário de cozinha", limite:5},
@@ -137,6 +146,9 @@ const vales = [
   {nome:"Aspirador de pó", limite:3}
 ];
 
+// =======================
+// Funções principais
+// =======================
 const catalogo = document.getElementById("catalogo");
 const loading = document.getElementById("loading");
 let currentSelection=null;
@@ -274,11 +286,14 @@ async function confirmarCompra(){
       body:JSON.stringify({nome,quantidade,comprador,totalComprado:0,status:"pendente"})
     });
     confMsg.textContent="✅ Enviado com sucesso!";
+    
+    // Atualiza os cards imediatamente antes de mostrar o modal do PIX
+    await atualizarCards();
+
     setTimeout(()=>{
       confirmModal.classList.remove('active');
       pixModal.classList.add('active');
-      atualizarCards();
-    },800);
+    },200); // um delay pequeno só para animação do modal
   }catch(err){
     confMsg.textContent="❌ Erro: "+err.message;
   }
